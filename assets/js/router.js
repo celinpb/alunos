@@ -2,25 +2,15 @@
 // router.js — Sistema de rotas SPA
 // Portal do Aluno — CELINPB
 // ============================================================
-//
-// Depende de pages.js, que deve ser carregado antes no index.html.
-//
-// PARA ADICIONAR UMA NOVA ROTA:
-//   1. Implemente Pages.nome em /pages/nome.js (ou em pages.js)
-//   2. Adicione o <script> no index.html ANTES de router.js
-//   3. Adicione a entrada em _rotas() abaixo
-// ============================================================
 
 const Router = (() => {
 
-  // Função — não objeto literal — para que Pages só seja
-  // acessado no momento da chamada, quando já estará definido.
   function _rotas() {
     return {
-      'login'      : { logado: false, render: Pages.login.render,        init: Pages.login.init        },
+      'login'       : { logado: false, render: Pages.login.render,        init: Pages.login.init        },
       'trocar-senha': { logado: false, render: Pages.trocarSenha.render,  init: Pages.trocarSenha.init  },
-      'home'       : { logado: true,  render: Pages.home.render,         init: Pages.home.init         },
-      'perfil'     : { logado: true,  render: Pages.perfil.render,       init: Pages.perfil.init       },
+      'home'        : { logado: true,  render: Pages.home.render,         init: Pages.home.init         },
+      'perfil'      : { logado: true,  render: Pages.perfil.render,       init: Pages.perfil.init       },
 
       // Rotas futuras — descomentadas conforme implementadas:
       // 'turmas'      : { logado: true, render: Pages.turmas.render,      init: Pages.turmas.init      },
@@ -71,6 +61,9 @@ const Router = (() => {
   }
 
   async function init() {
+    // Aplica o tema salvo ANTES de mostrar qualquer coisa (evita flash)
+    Layout.aplicarTemaSalvo();
+
     try {
       const res = await API.getConfig();
       if (res.success) window._escolaConfig = res.data;
@@ -83,5 +76,4 @@ const Router = (() => {
   return { ir, init };
 })();
 
-// Ponto de partida
 document.addEventListener('DOMContentLoaded', () => Router.init());
