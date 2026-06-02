@@ -381,3 +381,172 @@
 .empty-state-icon  { font-size: 2.4rem; color: var(--text-muted); opacity: 0.4; }
 .empty-state-title { font-size: var(--text-md); font-weight: var(--weight-semibold); color: var(--text-secondary); }
 .empty-state-desc  { font-size: var(--text-sm); color: var(--text-muted); max-width: 260px; }
+
+
+/* ══════════════════════════════════════════════════════════
+   PAINEL ADMIN
+══════════════════════════════════════════════════════════ */
+
+/* ── Abas ────────────────────────────────────────────────── */
+
+.admin-tabs {
+  display: flex;
+  gap: var(--space-1);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-1);
+}
+
+.admin-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-base) !important;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.admin-tab i { font-size: 0.85rem; }
+
+.admin-tab:hover  { color: var(--text-secondary); background: var(--bg-elevated); }
+.admin-tab:active { transform: scale(0.97); }
+
+.admin-tab.active {
+  background: var(--red-muted);
+  color: var(--red-light);
+  border: 1px solid var(--red-border);
+}
+
+
+/* ── Lista de toggles (módulos e semestres) ──────────────── */
+
+.admin-toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.admin-toggle-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+.admin-toggle-item:last-child { border-bottom: none; }
+
+.admin-toggle-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-toggle-icon {
+  width: 34px; height: 34px;
+  border-radius: var(--radius-md);
+  background: var(--red-muted);
+  border: 1px solid var(--red-border);
+  color: var(--red-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; flex-shrink: 0;
+}
+
+.admin-toggle-nome {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-toggle-sub {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 3px;
+}
+
+/* Oculta o label de texto do toggle nesta lista (ícone já identifica) */
+.admin-toggle-item .toggle-label { display: none; }
+
+
+/* ── Dica informativa ────────────────────────────────────── */
+
+.admin-info-hint {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  line-height: var(--leading-loose);
+}
+.admin-info-hint i { color: var(--info); flex-shrink: 0; margin-top: 3px; }
+
+
+/* ── Lista de usuários ───────────────────────────────────── */
+
+.admin-usuarios-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.admin-usuario-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+  transition: opacity var(--transition-base) !important;
+}
+.admin-usuario-item:last-child { border-bottom: none; }
+.admin-usuario-item.bloqueado  { opacity: 0.55; }
+
+.admin-usuario-info { flex: 1; min-width: 0; }
+
+.admin-usuario-login {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-usuario-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.admin-usuario-acoes { flex-shrink: 0; }
+
+.btn-usuario-menu {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition-fast) !important;
+}
+.btn-usuario-menu:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
