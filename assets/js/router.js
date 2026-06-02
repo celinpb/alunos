@@ -15,7 +15,7 @@ const Router = (() => {
       // Rotas futuras — descomentadas conforme implementadas:
       // 'turmas'      : { logado: true, render: Pages.turmas.render,      init: Pages.turmas.init      },
       'avisos'      : { logado: true, render: Pages.avisos.render,      init: Pages.avisos.init      },
-      // 'calendario'  : { logado: true, render: Pages.calendario.render,  init: Pages.calendario.init  },
+      'calendario'  : { logado: true, render: Pages.calendario.render,  init: Pages.calendario.init  },
       // 'documentos'  : { logado: true, render: Pages.documentos.render,  init: Pages.documentos.init  },
       // 'rematricula' : { logado: true, render: Pages.rematricula.render, init: Pages.rematricula.init },
       // 'historico'   : { logado: true, render: Pages.historico.render,   init: Pages.historico.init   },
