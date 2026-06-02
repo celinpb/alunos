@@ -16,23 +16,13 @@ const API = (() => {
     ERRO_INTERNO    : 500
   };
 
+  // Todas as requisições usam GET para evitar o preflight CORS do navegador.
+  // O Apps Script só suporta CORS sem configuração adicional via GET (doGet).
+  // Os dados trafegam via query string sobre HTTPS, o que é seguro.
   async function _get(params, autenticado = true) {
     const p = { ...params };
     if (autenticado) { const t = Auth.getToken(); if (t) p.token = t; }
     const res  = await fetch(`${App.SCRIPT_URL}?${new URLSearchParams(p)}`);
-    const json = await res.json();
-    _global(json);
-    return json;
-  }
-
-  async function _post(body, autenticado = true) {
-    const b = { ...body };
-    if (autenticado) { const t = Auth.getToken(); if (t) b.token = t; }
-    const res  = await fetch(App.SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(b)
-    });
     const json = await res.json();
     _global(json);
     return json;
@@ -50,19 +40,19 @@ const API = (() => {
     CODES,
     // Públicos
     getConfig    : ()                     => _get({ action: 'getConfig' }, false),
-    login        : (login, senha)         => _post({ action: 'login', login, senha }, false),
-    trocarSenha  : (login, atual, nova)   => _post({ action: 'trocarSenha', login, senhaAtual: atual, senhaNova: nova }, false),
+    login        : (login, senha)         => _get({ action: 'login', login, senha }, false),
+    trocarSenha  : (login, atual, nova)   => _get({ action: 'trocarSenha', login, senhaAtual: atual, senhaNova: nova }, false),
     verifyDoc    : (codigo)               => _get({ action: 'verifyDocument', codigo }, false),
     // Autenticados
-    logout           : ()                 => _post({ action: 'logout' }),
+    logout           : ()                 => _get({ action: 'logout' }),
     getPerfil        : ()                 => _get({ action: 'getPerfil' }),
     getModulos       : ()                 => _get({ action: 'getModulos' }),
     getSemestreAtual : ()                 => _get({ action: 'getSemestreAtual' }),
     // Admin
-    toggleModulo  : (modulo, status)      => _post({ action: 'toggleModulo',  modulo,    status }),
-    setRematricula: (semestreId, status)  => _post({ action: 'setRematricula',semestreId,status }),
+    toggleModulo  : (modulo, status)      => _get({ action: 'toggleModulo',  modulo,    status }),
+    setRematricula: (semestreId, status)  => _get({ action: 'setRematricula',semestreId,status }),
     listarUsuarios: ()                    => _get({ action: 'listarUsuarios' }),
-    toggleUsuario : (login, status)       => _post({ action: 'toggleUsuario', login,     status }),
-    redefinirSenha: (login)               => _post({ action: 'redefinirSenha',login }),
+    toggleUsuario : (login, status)       => _get({ action: 'toggleUsuario', login,     status }),
+    redefinirSenha: (login)               => _get({ action: 'redefinirSenha',login }),
   };
 })();
