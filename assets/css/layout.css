@@ -360,3 +360,94 @@
 @media (min-width: 1024px) {
   #app-content { max-width: 760px; padding-left: var(--space-10); }
 }
+
+
+/* ══════════════════════════════════════════════════════════
+   BOTÃO DE TEMA NA TELA DE LOGIN
+══════════════════════════════════════════════════════════ */
+
+.login-tema {
+  text-align: center;
+  margin-top: var(--space-4);
+}
+
+.btn-tema-login {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base) !important;
+}
+
+.btn-tema-login:hover {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
+}
+
+/* ══════════════════════════════════════════════════════════
+   AJUSTES DO TEMA CLARO — elementos específicos
+══════════════════════════════════════════════════════════ */
+
+/* Faixa vermelha do topo no login — igual nos dois temas */
+html.tema-claro .page-login::before {
+  background: var(--red);
+}
+
+/* Loading logo — borda mais suave no claro */
+html.tema-claro .loading-logo,
+html.tema-claro .login-logo {
+  box-shadow: var(--shadow-red);
+}
+
+/* Input — fundo branco puro no tema claro */
+html.tema-claro .form-input {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.12);
+}
+
+html.tema-claro .form-input:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.10);
+}
+
+/* Header — sombra suave no tema claro */
+html.tema-claro #app-header {
+  box-shadow: 0 1px 0 var(--border);
+}
+
+/* Nav — sombra no topo no mobile */
+html.tema-claro #app-nav {
+  box-shadow: 0 -1px 0 var(--border);
+}
+
+/* Card — sombra mais visível no claro */
+html.tema-claro .card {
+  box-shadow: var(--shadow-sm);
+}
+
+html.tema-claro .module-card {
+  box-shadow: var(--shadow-sm);
+}
+
+html.tema-claro .module-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Login card — sombra no claro */
+html.tema-claro .login-card {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border);
+}
+
+/* Scrollbar no tema claro */
+html.tema-claro ::-webkit-scrollbar-track { background: var(--bg-elevated); }
+html.tema-claro ::-webkit-scrollbar-thumb { background: var(--bg-subtle); }
