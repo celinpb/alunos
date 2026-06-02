@@ -1,0 +1,120 @@
+/* ============================================================
+   tokens.css — Design tokens
+   Portal do Aluno — CELINPB
+   Paleta inspirada na bandeira da Paraíba: vermelho, preto, branco
+   ============================================================ */
+
+:root {
+
+  /* ── Paleta base ──────────────────────────────────────────
+     Preto como fundo dominante (profundo, não chapado).
+     Vermelho paraibano como acento principal.
+     Branco e cinzas para texto e superfícies.
+  ─────────────────────────────────────────────────────────── */
+
+  /* Vermelho da bandeira da Paraíba */
+  --red           : #C8102E;   /* vermelho principal */
+  --red-light     : #e8294a;   /* hover / destaque */
+  --red-dark      : #9e0c23;   /* pressed */
+  --red-muted     : rgba(200, 16, 46, 0.12);
+  --red-border    : rgba(200, 16, 46, 0.35);
+
+  /* Fundos — escala de preto */
+  --bg-base       : #0e0e0e;   /* fundo da página */
+  --bg-surface    : #161616;   /* cards, painéis */
+  --bg-elevated   : #1f1f1f;   /* dropdowns, itens hover */
+  --bg-subtle     : #272727;   /* zebra, separadores */
+  --bg-overlay    : rgba(0, 0, 0, 0.80);
+
+  /* Texto — escala de branco */
+  --text-primary  : #f5f5f5;
+  --text-secondary: #a0a0a0;
+  --text-muted    : #555555;
+  --text-inverse  : #ffffff;   /* sobre vermelho */
+
+  /* Bordas */
+  --border        : rgba(255, 255, 255, 0.07);
+  --border-strong : rgba(255, 255, 255, 0.13);
+  --border-red    : var(--red-border);
+
+  /* Estados semânticos */
+  --success       : #4ade80;
+  --success-muted : rgba(74, 222, 128, 0.10);
+  --warning       : #fbbf24;
+  --warning-muted : rgba(251, 191, 36, 0.10);
+  --danger        : #f87171;
+  --danger-muted  : rgba(248, 113, 113, 0.10);
+  --info          : #60a5fa;
+  --info-muted    : rgba(96, 165, 250, 0.10);
+
+  /* Acento secundário (branco suave — links, ícones informativos) */
+  --white-accent  : rgba(255, 255, 255, 0.85);
+
+  /* ── Tipografia ───────────────────────────────────────────
+     DM Sans: limpa, neutra, excelente em mobile
+     DM Mono: matrícula, códigos
+  ─────────────────────────────────────────────────────────── */
+
+  --font-sans : 'DM Sans', system-ui, sans-serif;
+  --font-mono : 'DM Mono', monospace;
+
+  --text-xs   : 0.68rem;
+  --text-sm   : 0.80rem;
+  --text-base : 0.925rem;
+  --text-md   : 1.0rem;
+  --text-lg   : 1.125rem;
+  --text-xl   : 1.30rem;
+  --text-2xl  : 1.6rem;
+  --text-3xl  : 2.1rem;
+
+  --weight-light   : 300;
+  --weight-regular : 400;
+  --weight-medium  : 500;
+  --weight-semibold: 600;
+  --weight-bold    : 700;
+
+  --leading-tight  : 1.2;
+  --leading-normal : 1.5;
+  --leading-loose  : 1.7;
+
+  /* ── Espaçamento (escala 4px) ─────────────────────────── */
+
+  --space-1  : 0.25rem;
+  --space-2  : 0.5rem;
+  --space-3  : 0.75rem;
+  --space-4  : 1.0rem;
+  --space-5  : 1.25rem;
+  --space-6  : 1.5rem;
+  --space-8  : 2.0rem;
+  --space-10 : 2.5rem;
+  --space-12 : 3.0rem;
+  --space-16 : 4.0rem;
+
+  /* ── Bordas e raios ──────────────────────────────────────*/
+
+  --radius-sm  : 5px;
+  --radius-md  : 9px;
+  --radius-lg  : 14px;
+  --radius-xl  : 20px;
+  --radius-full: 9999px;
+
+  /* ── Sombras ─────────────────────────────────────────────*/
+
+  --shadow-sm   : 0 1px 4px rgba(0,0,0,0.5);
+  --shadow-md   : 0 4px 18px rgba(0,0,0,0.5);
+  --shadow-lg   : 0 8px 36px rgba(0,0,0,0.6);
+  --shadow-red  : 0 0 28px rgba(200, 16, 46, 0.22);
+
+  /* ── Transições ──────────────────────────────────────────*/
+
+  --transition-fast : 110ms ease;
+  --transition-base : 200ms ease;
+  --transition-slow : 360ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Layout ──────────────────────────────────────────────*/
+
+  --header-height : 54px;
+  --nav-height    : 62px;
+  --content-max   : 480px;
+  --page-padding  : var(--space-4);
+}
