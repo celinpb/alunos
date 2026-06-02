@@ -54,5 +54,10 @@ const API = (() => {
     listarUsuarios: ()                    => _get({ action: 'listarUsuarios' }),
     toggleUsuario : (login, status)       => _get({ action: 'toggleUsuario', login,     status }),
     redefinirSenha: (login)               => _get({ action: 'redefinirSenha',login }),
+    // Avisos
+    getAvisos    : ()                         => _get({ action: 'getAvisos' }),
+    salvarAviso  : (dados)                    => _get({ action: 'salvarAviso',  ...dados }),
+    toggleAviso  : (avisoId, ativo)           => _get({ action: 'toggleAviso',  avisoId, ativo }),
+    excluirAviso : (avisoId)                  => _get({ action: 'excluirAviso', avisoId }),
   };
 })();
