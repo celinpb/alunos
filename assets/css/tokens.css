@@ -118,3 +118,70 @@
   --content-max   : 480px;
   --page-padding  : var(--space-4);
 }
+
+/* ============================================================
+   TEMA CLARO — ativado pela classe .tema-claro no <html>
+   Mantém vermelho PB como acento; fundo branco, texto escuro.
+   ============================================================ */
+
+html.tema-claro {
+
+  /* Vermelho — igual nos dois temas (identidade da bandeira) */
+  --red           : #C8102E;
+  --red-light     : #e8294a;
+  --red-dark      : #9e0c23;
+  --red-muted     : rgba(200, 16, 46, 0.08);
+  --red-border    : rgba(200, 16, 46, 0.25);
+
+  /* Fundos — escala de branco */
+  --bg-base       : #f5f5f5;
+  --bg-surface    : #ffffff;
+  --bg-elevated   : #ebebeb;
+  --bg-subtle     : #e0e0e0;
+  --bg-overlay    : rgba(0, 0, 0, 0.50);
+
+  /* Texto — escala de preto */
+  --text-primary  : #111111;
+  --text-secondary: #444444;
+  --text-muted    : #888888;
+  --text-inverse  : #ffffff;
+
+  /* Bordas */
+  --border        : rgba(0, 0, 0, 0.08);
+  --border-strong : rgba(0, 0, 0, 0.15);
+  --border-red    : var(--red-border);
+
+  /* Estados semânticos */
+  --success       : #16a34a;
+  --success-muted : rgba(22, 163, 74, 0.10);
+  --warning       : #d97706;
+  --warning-muted : rgba(217, 119, 6, 0.10);
+  --danger        : #dc2626;
+  --danger-muted  : rgba(220, 38, 38, 0.10);
+  --info          : #2563eb;
+  --info-muted    : rgba(37, 99, 235, 0.10);
+
+  /* Sombras mais suaves */
+  --shadow-sm   : 0 1px 4px rgba(0,0,0,0.10);
+  --shadow-md   : 0 4px 18px rgba(0,0,0,0.10);
+  --shadow-lg   : 0 8px 36px rgba(0,0,0,0.12);
+  --shadow-red  : 0 0 24px rgba(200, 16, 46, 0.15);
+}
+
+/* Transição suave ao trocar de tema */
+body, body * {
+  transition:
+    background-color 220ms ease,
+    border-color     220ms ease,
+    color            220ms ease,
+    box-shadow       220ms ease;
+}
+
+/* Restaura transições específicas de componentes */
+.btn           { transition: background-color 110ms ease, border-color 110ms ease, transform 110ms ease, opacity 110ms ease !important; }
+.toggle        { transition: background-color 200ms ease, border-color 200ms ease !important; }
+.toggle::after { transition: transform 200ms ease, background-color 200ms ease !important; }
+.nav-item      { transition: background-color 110ms ease, transform 110ms ease !important; }
+.module-card   { transition: background-color 200ms ease, border-color 200ms ease, transform 200ms ease !important; }
+.spinner       { transition: none !important; }
+.loading-bar-fill { transition: none !important; }
