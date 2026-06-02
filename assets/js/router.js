@@ -16,54 +16,38 @@
 const Router = (() => {
 
   // ── Tabela de rotas ───────────────────────────────────────
-  // Cada rota define:
-  //   render  : função que retorna o HTML da página
-  //   init    : função chamada após o HTML ser injetado no DOM
-  //   guard   : papéis necessários (null = qualquer autenticado)
-  //   logado  : false = tela pública (login, troca de senha)
+  // Retornada por função para garantir que Pages já foi definido
+  // antes de qualquer referência (Pages está mais abaixo no arquivo).
+  //
+  // PARA ADICIONAR UMA NOVA ROTA:
+  //   1. Adicione a entrada aqui
+  //   2. Implemente Pages.nome em seu arquivo /pages/nome.js
+  //   3. Adicione o <script> correspondente no index.html
 
-  const ROTAS = {
+  function _rotas() {
+    return {
+      'login'      : { logado: false, render: Pages.login.render,       init: Pages.login.init       },
+      'trocar-senha': { logado: false, render: Pages.trocarSenha.render, init: Pages.trocarSenha.init },
+      'home'       : { logado: true,  render: Pages.home.render,        init: Pages.home.init        },
+      'perfil'     : { logado: true,  render: Pages.perfil.render,      init: Pages.perfil.init      },
 
-    'login': {
-      logado: false,
-      render: Pages.login.render,
-      init  : Pages.login.init
-    },
-
-    'trocar-senha': {
-      logado: false,
-      render: Pages.trocarSenha.render,
-      init  : Pages.trocarSenha.init
-    },
-
-    'home': {
-      logado: true,
-      render: Pages.home.render,
-      init  : Pages.home.init
-    },
-
-    'perfil': {
-      logado: true,
-      render: Pages.perfil.render,
-      init  : Pages.perfil.init
-    },
-
-    // ── Rotas futuras (descomentadas conforme implementadas) ─
-    // 'turmas'      : { logado: true, render: Pages.turmas.render,      init: Pages.turmas.init      },
-    // 'avisos'      : { logado: true, render: Pages.avisos.render,      init: Pages.avisos.init      },
-    // 'calendario'  : { logado: true, render: Pages.calendario.render,  init: Pages.calendario.init  },
-    // 'documentos'  : { logado: true, render: Pages.documentos.render,  init: Pages.documentos.init  },
-    // 'rematricula' : { logado: true, render: Pages.rematricula.render, init: Pages.rematricula.init },
-    // 'historico'   : { logado: true, render: Pages.historico.render,   init: Pages.historico.init   },
-    // 'chamados'    : { logado: true, render: Pages.chamados.render,    init: Pages.chamados.init     },
-    // 'admin'       : { logado: true, guard: ['admin'], render: Pages.admin.render, init: Pages.admin.init },
-  };
+      // ── Rotas futuras (descomentadas conforme implementadas) ─
+      // 'turmas'      : { logado: true, render: Pages.turmas.render,      init: Pages.turmas.init      },
+      // 'avisos'      : { logado: true, render: Pages.avisos.render,      init: Pages.avisos.init      },
+      // 'calendario'  : { logado: true, render: Pages.calendario.render,  init: Pages.calendario.init  },
+      // 'documentos'  : { logado: true, render: Pages.documentos.render,  init: Pages.documentos.init  },
+      // 'rematricula' : { logado: true, render: Pages.rematricula.render, init: Pages.rematricula.init },
+      // 'historico'   : { logado: true, render: Pages.historico.render,   init: Pages.historico.init   },
+      // 'chamados'    : { logado: true, render: Pages.chamados.render,    init: Pages.chamados.init    },
+      // 'admin'       : { logado: true, guard: ['admin'], render: Pages.admin.render, init: Pages.admin.init },
+    };
+  }
 
   let _rotaAtual = null;
 
   // ── Navegar para uma rota ─────────────────────────────────
   function ir(rota, params = {}) {
-    const def = ROTAS[rota];
+    const def = _rotas()[rota];
 
     if (!def) {
       console.warn(`[Router] Rota '${rota}' não encontrada. Redirecionando para home.`);
