@@ -1,5 +1,5 @@
 // ============================================================
-// layout.js — Shell da aplicação (header, nav, loading)
+// layout.js — Shell da aplicação (header, nav, loading, tema)
 // Portal do Aluno — CELINPB
 // ============================================================
 
@@ -38,7 +38,54 @@ const Layout = (() => {
     ]
   };
 
-  // ── Loading ───────────────────────────────────────────────
+
+  // ══════════════════════════════════════════════════════════
+  // TEMA CLARO / ESCURO
+  // ══════════════════════════════════════════════════════════
+
+  const TEMA_KEY = 'portal_tema'; // localStorage
+
+  /** Retorna true se o tema claro está ativo. */
+  function temaClaro() {
+    return document.documentElement.classList.contains('tema-claro');
+  }
+
+  /** Aplica o tema salvo (chamado na inicialização, antes do loading sumir). */
+  function aplicarTemaSalvo() {
+    const salvo = localStorage.getItem(TEMA_KEY);
+    // Padrão: escuro. Aplica claro só se explicitamente salvo.
+    if (salvo === 'claro') {
+      document.documentElement.classList.add('tema-claro');
+    }
+  }
+
+  /** Alterna entre tema claro e escuro e salva a preferência. */
+  function alternarTema() {
+    const claro = document.documentElement.classList.toggle('tema-claro');
+    localStorage.setItem(TEMA_KEY, claro ? 'claro' : 'escuro');
+    // Atualiza o ícone do botão em todos os headers visíveis
+    document.querySelectorAll('#btn-tema i').forEach(i => {
+      i.className = claro ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+    });
+    document.querySelectorAll('#btn-tema').forEach(btn => {
+      btn.setAttribute('aria-label', claro ? 'Mudar para tema escuro' : 'Mudar para tema claro');
+    });
+  }
+
+  /** Gera o botão de tema com o ícone correto para o estado atual. */
+  function _btnTemaHTML() {
+    const claro = temaClaro();
+    return `<button class="header-action" id="btn-tema"
+      aria-label="${claro ? 'Mudar para tema escuro' : 'Mudar para tema claro'}">
+      <i class="${claro ? 'fa-solid fa-moon' : 'fa-solid fa-sun'}"></i>
+    </button>`;
+  }
+
+
+  // ══════════════════════════════════════════════════════════
+  // LOADING
+  // ══════════════════════════════════════════════════════════
+
   function esconderLoading() {
     const loading = document.getElementById('app-loading');
     const app     = document.getElementById('app');
@@ -46,21 +93,37 @@ const Layout = (() => {
     if (app) app.classList.remove('hidden');
   }
 
-  // ── Header ────────────────────────────────────────────────
+
+  // ══════════════════════════════════════════════════════════
+  // HEADER
+  // ══════════════════════════════════════════════════════════
+
   function configurarHeader({ mostrar = true, titulo = '', voltar = false, rotaVoltar, acao } = {}) {
     const h = document.getElementById('app-header');
     if (!h) return;
     if (!mostrar) { h.classList.add('hidden'); return; }
     h.classList.remove('hidden');
+
     h.innerHTML = `
-      ${voltar ? `<button class="header-back" id="hdr-back" aria-label="Voltar"><i class="fa-solid fa-arrow-left"></i></button>` : ''}
+      ${voltar ? `<button class="header-back" id="hdr-back" aria-label="Voltar">
+        <i class="fa-solid fa-arrow-left"></i></button>` : ''}
       <h1 class="header-title">${titulo}</h1>
-      ${acao   ? `<button class="header-action" id="hdr-acao" aria-label="${acao.label||'Ação'}"><i class="${acao.icone}"></i></button>` : ''}`;
-    document.getElementById('hdr-back')?.addEventListener('click', () => rotaVoltar ? Router.ir(rotaVoltar) : history.back());
-    if (acao?.onClick) document.getElementById('hdr-acao')?.addEventListener('click', acao.onClick);
+      ${acao ? `<button class="header-action" id="hdr-acao" aria-label="${acao.label || 'Ação'}">
+        <i class="${acao.icone}"></i></button>` : ''}
+      ${_btnTemaHTML()}`;
+
+    document.getElementById('hdr-back')?.addEventListener('click', () =>
+      rotaVoltar ? Router.ir(rotaVoltar) : history.back());
+    if (acao?.onClick)
+      document.getElementById('hdr-acao')?.addEventListener('click', acao.onClick);
+    document.getElementById('btn-tema')?.addEventListener('click', alternarTema);
   }
 
-  // ── Nav ───────────────────────────────────────────────────
+
+  // ══════════════════════════════════════════════════════════
+  // NAV
+  // ══════════════════════════════════════════════════════════
+
   function montarNav(papel, rotaAtiva) {
     const nav = document.getElementById('app-nav');
     if (!nav) return;
@@ -75,7 +138,9 @@ const Layout = (() => {
     nav.querySelectorAll('.nav-item').forEach(el => {
       const go = () => Router.ir(el.dataset.rota);
       el.addEventListener('click', go);
-      el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }});
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+      });
     });
   }
 
@@ -87,7 +152,11 @@ const Layout = (() => {
 
   function esconderNav() { document.getElementById('app-nav')?.classList.add('hidden'); }
 
-  // ── Configurar (chamado pelo router) ──────────────────────
+
+  // ══════════════════════════════════════════════════════════
+  // CONFIGURAR (chamado pelo router em cada troca de página)
+  // ══════════════════════════════════════════════════════════
+
   function configurar({ logado = true, titulo, voltar, rotaVoltar, acao, rotaAtiva } = {}) {
     const content = document.getElementById('app-content');
     if (!logado) {
@@ -101,5 +170,20 @@ const Layout = (() => {
     montarNav(Auth.getPapel() || 'aluno', rotaAtiva || '');
   }
 
-  return { esconderLoading, configurarHeader, montarNav, atualizarNavAtiva, esconderNav, configurar };
+
+  // ══════════════════════════════════════════════════════════
+  // EXPORTAÇÃO
+  // ══════════════════════════════════════════════════════════
+
+  return {
+    esconderLoading,
+    aplicarTemaSalvo,
+    alternarTema,
+    temaClaro,
+    configurarHeader,
+    montarNav,
+    atualizarNavAtiva,
+    esconderNav,
+    configurar
+  };
 })();
