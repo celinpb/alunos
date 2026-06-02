@@ -59,5 +59,9 @@ const API = (() => {
     salvarAviso  : (dados)                    => _get({ action: 'salvarAviso',  ...dados }),
     toggleAviso  : (avisoId, ativo)           => _get({ action: 'toggleAviso',  avisoId, ativo }),
     excluirAviso : (avisoId)                  => _get({ action: 'excluirAviso', avisoId }),
+    // Calendário
+    getCalendario: ()                         => _get({ action: 'getCalendario' }),
+    salvarEvento : (dados)                    => _get({ action: 'salvarEvento',  ...dados }),
+    excluirEvento: (eventoId)                 => _get({ action: 'excluirEvento', eventoId }),
   };
 })();
