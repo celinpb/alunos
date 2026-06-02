@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0e0e0e" />
+  <title>Verificar Documento — CELINPB</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 1.5rem; }
+    body::before {
+      content: ''; position: fixed; top: 0; left: 0; right: 0; height: 4px;
+      background: var(--red);
+    }
+    .verify-container { width: 100%; max-width: 420px; animation: slideUp 0.4s ease both; }
+    .verify-brand { text-align: center; margin-bottom: 2rem; }
+    .verify-logo {
+      width: 52px; height: 52px; margin: 0 auto 1rem;
+      background: var(--red-muted); border: 1px solid var(--red-border);
+      border-radius: var(--radius-xl);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .verify-logo i { font-size: 1.4rem; color: var(--red-light); }
+    .verify-brand h1 { font-size: var(--text-xl); }
+    .verify-brand p  { font-size: var(--text-sm); color: var(--text-muted); margin-top: .25rem; }
+    .verify-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 1.5rem; }
+    #verify-result { margin-top: 1.25rem; display: none; }
+    .result-valid   { padding: 1rem; border-radius: var(--radius-md); background: var(--success-muted); border: 1px solid rgba(74,222,128,.2); color: var(--success); }
+    .result-invalid { padding: 1rem; border-radius: var(--radius-md); background: var(--danger-muted);  border: 1px solid rgba(248,113,113,.2); color: var(--danger); }
+    .result-icon { font-size: 1.5rem; margin-bottom: .5rem; }
+    .result-title { font-weight: 600; font-size: var(--text-md); }
+    .result-desc  { font-size: var(--text-sm); margin-top: .25rem; opacity: .8; }
+    .verify-footer { text-align: center; margin-top: 1.5rem; font-size: var(--text-sm); color: var(--text-muted); }
+    .verify-footer a { color: var(--red-light); }
+  </style>
+</head>
+<body>
+
+  <div class="verify-container">
+
+    <div class="verify-brand">
+      <div class="verify-logo"><i class="fa-solid fa-shield-halved"></i></div>
+      <h1>Verificação de Documento</h1>
+      <p>CELINPB — Portal do Aluno</p>
+    </div>
+
+    <div class="verify-card">
+      <div class="form-group">
+        <label class="form-label" for="v-codigo">Código de validação</label>
+        <div class="input-wrapper">
+          <i class="input-icon fa-solid fa-barcode"></i>
+          <input class="form-input form-input-mono" type="text"
+            id="v-codigo" placeholder="Ex: CEL-2026-XXXXXX"
+            autocapitalize="characters" spellcheck="false" />
+        </div>
+        <span class="form-hint">Insira o código impresso no documento para confirmar sua autenticidade.</span>
+      </div>
+
+      <button class="btn btn-primary btn-full" style="margin-top:1rem" id="v-btn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        Verificar
+      </button>
+
+      <div id="verify-result"></div>
+    </div>
+
+    <div class="verify-footer">
+      <a href="index.html">← Voltar ao Portal do Aluno</a>
+    </div>
+
+  </div>
+
+  <script src="assets/js/config.js"></script>
+  <script>
+    document.getElementById('v-btn').addEventListener('click', async () => {
+      const codigo = document.getElementById('v-codigo').value.trim();
+      const result = document.getElementById('verify-result');
+      const btn    = document.getElementById('v-btn');
+
+      if (!codigo) {
+        result.style.display = 'block';
+        result.innerHTML = `<div class="result-invalid">
+          <div class="result-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="result-title">Código não informado</div>
+          <div class="result-desc">Digite o código de validação do documento.</div>
+        </div>`;
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span>Verificando...</span>';
+      result.style.display = 'none';
+
+      try {
+        const res = await fetch(`${App.SCRIPT_URL}?action=verifyDocument&codigo=${encodeURIComponent(codigo)}`);
+        const json = await res.json();
+
+        result.style.display = 'block';
+        if (json.success && json.data?.valido) {
+          result.innerHTML = `<div class="result-valid">
+            <div class="result-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="result-title">Documento válido</div>
+            <div class="result-desc">Este documento foi emitido pelo CELINPB e sua autenticidade foi confirmada.</div>
+          </div>`;
+        } else {
+          result.innerHTML = `<div class="result-invalid">
+            <div class="result-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div class="result-title">Documento não encontrado</div>
+            <div class="result-desc">O código informado não corresponde a nenhum documento emitido pelo CELINPB.</div>
+          </div>`;
+        }
+      } catch (_) {
+        result.style.display = 'block';
+        result.innerHTML = `<div class="result-invalid">
+          <div class="result-icon"><i class="fa-solid fa-wifi"></i></div>
+          <div class="result-title">Erro de conexão</div>
+          <div class="result-desc">Não foi possível verificar o documento. Verifique sua internet e tente novamente.</div>
+        </div>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Verificar';
+      }
+    });
+
+    // Verificar via parâmetro na URL (ex: verify.html?codigo=CEL-2026-XXXXXX)
+    const urlParams = new URLSearchParams(window.location.search);
+    const codigoUrl = urlParams.get('codigo');
+    if (codigoUrl) {
+      document.getElementById('v-codigo').value = codigoUrl;
+      document.getElementById('v-btn').click();
+    }
+  </script>
+
+</body>
+</html>
