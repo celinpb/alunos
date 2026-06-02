@@ -71,6 +71,13 @@ Pages.login = {
             Problemas com o acesso? Procure a secretaria.
           </div>
 
+          <div class="login-tema">
+            <button class="btn-tema-login" id="login-btn-tema" aria-label="Alternar tema">
+              <i id="login-tema-icon" class="fa-solid fa-sun"></i>
+              <span id="login-tema-label">Tema claro</span>
+            </button>
+          </div>
+
         </div>
       </div>`;
   },
@@ -142,6 +149,23 @@ Pages.login = {
     }
 
     setTimeout(() => inputMat.focus(), 100);
+
+    // Botão de tema na tela de login
+    const btnTemaLogin  = document.getElementById('login-btn-tema');
+    const temaIcon      = document.getElementById('login-tema-icon');
+    const temaLabel     = document.getElementById('login-tema-label');
+
+    function _atualizarBtnTema() {
+      const claro = document.documentElement.classList.contains('tema-claro');
+      temaIcon.className  = claro ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+      temaLabel.textContent = claro ? 'Tema escuro' : 'Tema claro';
+    }
+
+    _atualizarBtnTema();
+    btnTemaLogin?.addEventListener('click', () => {
+      Layout.alternarTema();
+      _atualizarBtnTema();
+    });
   }
 };
 
