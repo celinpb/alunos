@@ -63,5 +63,9 @@ const API = (() => {
     getCalendario: ()                         => _get({ action: 'getCalendario' }),
     salvarEvento : (dados)                    => _get({ action: 'salvarEvento',  ...dados }),
     excluirEvento: (eventoId)                 => _get({ action: 'excluirEvento', eventoId }),
+    // Turmas
+    getTurmasAluno      : ()                  => _get({ action: 'getTurmasAluno' }),
+    salvarMensagemTurma : (dados)             => _get({ action: 'salvarMensagemTurma',  ...dados }),
+    excluirMensagemTurma: (mensagemId)        => _get({ action: 'excluirMensagemTurma', mensagemId }),
   };
 })();
