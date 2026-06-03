@@ -13,7 +13,7 @@ const Router = (() => {
       'perfil'      : { logado: true,  render: Pages.perfil.render,       init: Pages.perfil.init       },
 
       // Rotas futuras — descomentadas conforme implementadas:
-      // 'turmas'      : { logado: true, render: Pages.turmas.render,      init: Pages.turmas.init      },
+      'turmas'      : { logado: true, render: Pages.turmas.render,      init: Pages.turmas.init      },
       'avisos'      : { logado: true, render: Pages.avisos.render,      init: Pages.avisos.init      },
       'calendario'  : { logado: true, render: Pages.calendario.render,  init: Pages.calendario.init  },
       // 'documentos'  : { logado: true, render: Pages.documentos.render,  init: Pages.documentos.init  },
