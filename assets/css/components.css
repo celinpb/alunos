@@ -843,3 +843,256 @@
   width: 5px; height: 5px;
   border-radius: 50%;
 }
+
+
+/* ══════════════════════════════════════════════════════════
+   TURMAS ATUAIS
+══════════════════════════════════════════════════════════ */
+
+/* ── Card da turma ───────────────────────────────────────── */
+
+.turma-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+}
+
+.turma-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.turma-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  min-width: 0;
+}
+
+.turma-idioma-badge {
+  width: 42px; height: 42px;
+  border-radius: var(--radius-md);
+  background: var(--red-muted);
+  border: 1px solid var(--red-border);
+  color: var(--red-light);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+}
+
+.turma-nome {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.turma-sub {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Links rápidos ───────────────────────────────────────── */
+
+.turma-links {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.turma-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-fast) !important;
+}
+.turma-link:hover {
+  background: var(--red-muted);
+  border-color: var(--red-border);
+  color: var(--red-light);
+  text-decoration: none;
+}
+
+/* ── Frequência resumo ───────────────────────────────────── */
+
+.freq-resumo {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.freq-resumo-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.freq-label {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-weight: var(--weight-medium);
+}
+
+.freq-valor {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+}
+
+.freq-barra {
+  height: 6px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.freq-barra-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+.freq-alerta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--danger-muted);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--danger);
+  font-weight: var(--weight-medium);
+}
+
+/* ── Seções expansíveis ──────────────────────────────────── */
+
+.turma-secao {
+  border-bottom: 1px solid var(--border);
+}
+.turma-secao:last-child { border-bottom: none; }
+
+.turma-secao-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transition-fast) !important;
+}
+.turma-secao-header:hover { background: var(--bg-elevated); }
+
+.turma-secao-titulo {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.turma-secao-titulo i { color: var(--text-muted); font-size: 0.9rem; }
+
+.turma-secao-chevron {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  transition: transform var(--transition-base) !important;
+}
+
+.turma-secao-corpo {
+  display: none;
+  padding: 0 var(--space-5) var(--space-4);
+}
+
+/* Estado aberto */
+.turma-secao.aberta .turma-secao-chevron { transform: rotate(180deg); }
+.turma-secao.aberta .turma-secao-corpo   { display: block; }
+.turma-secao.aberta .turma-secao-titulo  { color: var(--text-primary); }
+
+/* ── Notas ───────────────────────────────────────────────── */
+
+.nota-componente {
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.nota-componente:last-child { border-bottom: none; margin-bottom: 0; }
+
+.nota-comp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+.nota-comp-nome   { font-weight: var(--weight-semibold); font-size: var(--text-md); }
+.nota-comp-media  { font-size: var(--text-lg); font-weight: var(--weight-bold); display: flex; align-items: center; gap: var(--space-2); }
+
+.nota-subcomps { display: flex; flex-direction: column; gap: var(--space-1); }
+.nota-subcomp  {
+  display: flex; justify-content: space-between;
+  font-size: var(--text-sm); color: var(--text-secondary);
+  padding: var(--space-1) 0;
+}
+.nota-sub-nome  { color: var(--text-muted); }
+.nota-sub-valor { font-weight: var(--weight-medium); color: var(--text-primary); }
+
+/* ── Conteúdo ministrado ─────────────────────────────────── */
+
+.conteudo-lista { display: flex; flex-direction: column; gap: 0; }
+.conteudo-item  {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+.conteudo-item:last-child { border-bottom: none; }
+.conteudo-data  { color: var(--text-muted); flex-shrink: 0; font-family: var(--font-mono); font-size: var(--text-xs); padding-top: 2px; }
+.conteudo-texto { color: var(--text-secondary); }
+
+/* ── Comentários pedagógicos ─────────────────────────────── */
+
+.comentario-item {
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+.comentario-item:last-child { border-bottom: none; }
+.comentario-meta { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2); }
+.comentario-data { font-size: var(--text-xs); color: var(--text-muted); margin-left: auto; }
+.comentario-texto { font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-loose); }
+
+/* ── Mensagens do professor ──────────────────────────────── */
+
+.mensagem-item {
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--red-border);
+}
+.mensagem-meta  { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2); flex-wrap: wrap; }
+.mensagem-autor { font-size: var(--text-xs); color: var(--text-muted); font-weight: var(--weight-medium); }
+.mensagem-data  { font-size: var(--text-xs); color: var(--text-muted); }
+.mensagem-texto { font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-loose); }
