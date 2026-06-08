@@ -1096,3 +1096,29 @@
 .mensagem-autor { font-size: var(--text-xs); color: var(--text-muted); font-weight: var(--weight-medium); }
 .mensagem-data  { font-size: var(--text-xs); color: var(--text-muted); }
 .mensagem-texto { font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-loose); }
+
+
+/* ── Período da turma ────────────────────────────────────── */
+
+.turma-periodo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.turma-periodo i { color: var(--red-light); font-size: 0.8rem; }
+
+.turma-periodo-total {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-muted);
+  background: var(--bg-subtle);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+}
