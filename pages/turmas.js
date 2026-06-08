@@ -122,6 +122,9 @@ function _turmaCardHTML(t, idx) {
         ${_badgeSituacao(notas.situacaoGeral)}
       </div>
 
+      <!-- Período da turma -->
+      ${_periodoHTML(turma)}
+
       <!-- Links rápidos -->
       ${_linksHTML(turma)}
 
@@ -170,6 +173,22 @@ function _linksHTML(turma) {
     <i class="fa-solid fa-graduation-cap"></i> Classroom</a>`);
   if (links.length === 0) return '';
   return `<div class="turma-links">${links.join('')}</div>`;
+}
+
+
+// ── Período da turma (primeira e última aula) ────────────────
+
+function _periodoHTML(turma) {
+  if (!turma.primeiraAula && !turma.ultimaAula) return '';
+  const total = turma.totalAulasPrevistas
+    ? `<span class="turma-periodo-total">${turma.totalAulasPrevistas} aulas previstas</span>`
+    : '';
+  return `
+    <div class="turma-periodo">
+      <i class="fa-solid fa-calendar-days"></i>
+      <span>${turma.primeiraAula || '?'} – ${turma.ultimaAula || '?'}</span>
+      ${total}
+    </div>`;
 }
 
 
@@ -268,6 +287,10 @@ function _notasHTML(notas) {
 function _freqDetalheHTML(freq) {
   return `
     <div class="info-list">
+      <div class="info-item">
+        <span class="info-label">Total de aulas previstas</span>
+        <span class="info-value">${freq.totalPrevistas ?? '—'}</span>
+      </div>
       <div class="info-item">
         <span class="info-label">Aulas registradas</span>
         <span class="info-value">${freq.totalAulas}</span>
