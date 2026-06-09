@@ -67,5 +67,7 @@ const API = (() => {
     getTurmasAluno      : ()                  => _get({ action: 'getTurmasAluno' }),
     salvarMensagemTurma : (dados)             => _get({ action: 'salvarMensagemTurma',  ...dados }),
     excluirMensagemTurma: (mensagemId)        => _get({ action: 'excluirMensagemTurma', mensagemId }),
+    // Documentos
+    gerarDocumento: (tipo, matriculaId)       => _get({ action: 'gerarDocumento', tipo, matriculaId: matriculaId || '' }),
   };
 })();
