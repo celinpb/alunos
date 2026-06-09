@@ -15,12 +15,16 @@
   <link rel="stylesheet" href="assets/css/components.css" />
 
   <style>
-    body { display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 1.5rem; }
+    body {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100dvh; padding: 1.5rem;
+    }
     body::before {
-      content: ''; position: fixed; top: 0; left: 0; right: 0; height: 4px;
-      background: var(--red);
+      content: ''; position: fixed; top: 0; left: 0; right: 0;
+      height: 4px; background: var(--red);
     }
     .verify-container { width: 100%; max-width: 420px; animation: slideUp 0.4s ease both; }
+
     .verify-brand { text-align: center; margin-bottom: 2rem; }
     .verify-logo {
       width: 52px; height: 52px; margin: 0 auto 1rem;
@@ -30,15 +34,64 @@
     }
     .verify-logo i { font-size: 1.4rem; color: var(--red-light); }
     .verify-brand h1 { font-size: var(--text-xl); }
-    .verify-brand p  { font-size: var(--text-sm); color: var(--text-muted); margin-top: .25rem; }
-    .verify-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 1.5rem; }
+    .verify-brand p  { font-size: var(--text-sm); color: var(--text-muted); margin-top:.25rem; }
+
+    .verify-card {
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: var(--radius-xl); padding: 1.5rem;
+    }
+
     #verify-result { margin-top: 1.25rem; display: none; }
-    .result-valid   { padding: 1rem; border-radius: var(--radius-md); background: var(--success-muted); border: 1px solid rgba(74,222,128,.2); color: var(--success); }
-    .result-invalid { padding: 1rem; border-radius: var(--radius-md); background: var(--danger-muted);  border: 1px solid rgba(248,113,113,.2); color: var(--danger); }
-    .result-icon { font-size: 1.5rem; margin-bottom: .5rem; }
+
+    .result-valid {
+      padding: 1rem; border-radius: var(--radius-md);
+      background: var(--success-muted);
+      border: 1px solid rgba(74,222,128,.2); color: var(--success);
+    }
+    .result-invalid {
+      padding: 1rem; border-radius: var(--radius-md);
+      background: var(--danger-muted);
+      border: 1px solid rgba(248,113,113,.2); color: var(--danger);
+    }
+    .result-icon  { font-size: 1.5rem; margin-bottom: .5rem; }
     .result-title { font-weight: 600; font-size: var(--text-md); }
-    .result-desc  { font-size: var(--text-sm); margin-top: .25rem; opacity: .8; }
-    .verify-footer { text-align: center; margin-top: 1.5rem; font-size: var(--text-sm); color: var(--text-muted); }
+    .result-desc  { font-size: var(--text-sm); margin-top: .25rem; opacity: .85; }
+
+    .result-dados {
+      margin-top: .85rem;
+      display: flex; flex-direction: column; gap: 5px;
+      font-size: var(--text-sm); color: var(--text-secondary);
+      border-top: 1px solid rgba(74,222,128,.2);
+      padding-top: .75rem;
+    }
+    .result-dados span { display: flex; gap: .5rem; }
+    .result-dados strong { color: var(--text-primary); }
+
+    .btn-ver-copia {
+      display: flex; align-items: center; justify-content: center;
+      gap: .5rem;
+      margin-top: 1rem; width: 100%;
+      padding: .6rem 1rem;
+      background: var(--success-muted);
+      border: 1px solid rgba(74,222,128,.3);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm); font-weight: 600;
+      color: var(--success); cursor: pointer;
+      transition: all .15s ease;
+    }
+    .btn-ver-copia:hover { background: rgba(74,222,128,.18); }
+    .btn-ver-copia.loading::after {
+      content: ''; width: 12px; height: 12px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin .65s linear infinite;
+      margin-left: .5rem;
+    }
+
+    .verify-footer {
+      text-align: center; margin-top: 1.5rem;
+      font-size: var(--text-sm); color: var(--text-muted);
+    }
     .verify-footer a { color: var(--red-light); }
   </style>
 </head>
@@ -61,12 +114,13 @@
             id="v-codigo" placeholder="Ex: CEL-2026-XXXXXX"
             autocapitalize="characters" spellcheck="false" />
         </div>
-        <span class="form-hint">Insira o código impresso no documento para confirmar sua autenticidade.</span>
+        <span class="form-hint">
+          Insira o código impresso no documento para confirmar sua autenticidade.
+        </span>
       </div>
 
       <button class="btn btn-primary btn-full" style="margin-top:1rem" id="v-btn">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        Verificar
+        <i class="fa-solid fa-magnifying-glass"></i> Verificar
       </button>
 
       <div id="verify-result"></div>
@@ -80,10 +134,13 @@
 
   <script src="assets/js/config.js"></script>
   <script>
-    document.getElementById('v-btn').addEventListener('click', async () => {
-      const codigo = document.getElementById('v-codigo').value.trim();
-      const result = document.getElementById('verify-result');
-      const btn    = document.getElementById('v-btn');
+    // Cache do HTML da cópia para não buscar duas vezes
+    let _htmlCopia = null;
+
+    async function verificar() {
+      const codigo  = document.getElementById('v-codigo').value.trim().toUpperCase();
+      const result  = document.getElementById('verify-result');
+      const btn     = document.getElementById('v-btn');
 
       if (!codigo) {
         result.style.display = 'block';
@@ -98,51 +155,116 @@
       btn.disabled = true;
       btn.innerHTML = '<span>Verificando...</span>';
       result.style.display = 'none';
+      _htmlCopia = null;
 
       try {
-        const res = await fetch(`${App.SCRIPT_URL}?action=verifyDocument&codigo=${encodeURIComponent(codigo)}`);
+        const res  = await fetch(`${App.SCRIPT_URL}?action=verifyDocument&codigo=${encodeURIComponent(codigo)}`);
         const json = await res.json();
 
         result.style.display = 'block';
+
         if (json.success && json.data?.valido) {
           const d = json.data;
-          result.innerHTML = `<div class="result-valid">
-            <div class="result-icon"><i class="fa-solid fa-circle-check"></i></div>
-            <div class="result-title">Documento válido</div>
-            <div class="result-desc">Este documento foi emitido pelo CELINPB e sua autenticidade foi confirmada.</div>
-            <div style="margin-top:.75rem;font-size:.85rem;display:flex;flex-direction:column;gap:4px">
-              <div><strong>Tipo:</strong> ${d.tipoDocumento || '—'}</div>
-              <div><strong>Semestre:</strong> ${d.semestre || '—'}</div>
-              <div><strong>Emitido em:</strong> ${d.dataEmissao || '—'}</div>
-            </div>
-          </div>`;
+          _htmlCopia = d.html || null;
+
+          result.innerHTML = `
+            <div class="result-valid">
+              <div class="result-icon"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="result-title">Documento válido</div>
+              <div class="result-desc">
+                Autenticidade confirmada. Este documento foi emitido pelo CELINPB.
+              </div>
+              <div class="result-dados">
+                <span><strong>Tipo:</strong> ${d.tipoDocumento || '—'}</span>
+                <span><strong>Titular:</strong> ${d.nomeAluno || '—'}</span>
+                <span><strong>CPF/CIN:</strong> ${d.cpf || '—'}</span>
+                <span><strong>Semestre:</strong> ${d.semestre || '—'}</span>
+                <span><strong>Emitido em:</strong> ${d.dataEmissao || '—'}</span>
+              </div>
+              ${_htmlCopia ? `
+              <button class="btn-ver-copia" id="btn-copia">
+                <i class="fa-solid fa-print"></i> Abrir cópia do documento
+              </button>` : ''}
+            </div>`;
+
+          document.getElementById('btn-copia')?.addEventListener('click', abrirCopia);
+
         } else {
           result.innerHTML = `<div class="result-invalid">
             <div class="result-icon"><i class="fa-solid fa-circle-xmark"></i></div>
             <div class="result-title">Documento não encontrado</div>
-            <div class="result-desc">O código informado não corresponde a nenhum documento emitido pelo CELINPB.</div>
+            <div class="result-desc">
+              O código informado não corresponde a nenhum documento emitido pelo CELINPB.
+              Verifique se o código foi digitado corretamente.
+            </div>
           </div>`;
         }
+
       } catch (_) {
         result.style.display = 'block';
         result.innerHTML = `<div class="result-invalid">
           <div class="result-icon"><i class="fa-solid fa-wifi"></i></div>
           <div class="result-title">Erro de conexão</div>
-          <div class="result-desc">Não foi possível verificar o documento. Verifique sua internet e tente novamente.</div>
+          <div class="result-desc">Não foi possível verificar. Tente novamente.</div>
         </div>`;
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Verificar';
       }
-    });
-
-    // Verificar via parâmetro na URL (ex: verify.html?codigo=CEL-2026-XXXXXX)
-    const urlParams = new URLSearchParams(window.location.search);
-    const codigoUrl = urlParams.get('codigo');
-    if (codigoUrl) {
-      document.getElementById('v-codigo').value = codigoUrl;
-      document.getElementById('v-btn').click();
     }
+
+    async function abrirCopia() {
+      const btn = document.getElementById('btn-copia');
+
+      // Se já temos o HTML em cache, abre direto
+      if (_htmlCopia) {
+        _abrirJanela(_htmlCopia);
+        return;
+      }
+
+      // Caso contrário, busca com gerarCopia=true
+      btn.disabled = true;
+      btn.classList.add('loading');
+      const codigo = document.getElementById('v-codigo').value.trim().toUpperCase();
+
+      try {
+        const res  = await fetch(`${App.SCRIPT_URL}?action=verifyDocument&codigo=${encodeURIComponent(codigo)}&gerarCopia=true`);
+        const json = await res.json();
+        if (json.success && json.data?.html) {
+          _htmlCopia = json.data.html;
+          _abrirJanela(_htmlCopia);
+        }
+      } catch (_) {} finally {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+      }
+    }
+
+    function _abrirJanela(html) {
+      const janela = window.open('', '_blank');
+      if (!janela) {
+        alert('Pop-up bloqueado. Permita pop-ups para este site e tente novamente.');
+        return;
+      }
+      janela.document.write(html);
+      janela.document.close();
+      janela.onload = () => janela.print();
+    }
+
+    // Verificar via Enter
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('v-btn').addEventListener('click', verificar);
+      document.getElementById('v-codigo').addEventListener('keydown', e => {
+        if (e.key === 'Enter') verificar();
+      });
+
+      // Verificar automaticamente se código vier na URL
+      const codigo = new URLSearchParams(window.location.search).get('codigo');
+      if (codigo) {
+        document.getElementById('v-codigo').value = codigo;
+        verificar();
+      }
+    });
   </script>
 
 </body>
