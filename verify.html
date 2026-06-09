@@ -105,10 +105,16 @@
 
         result.style.display = 'block';
         if (json.success && json.data?.valido) {
+          const d = json.data;
           result.innerHTML = `<div class="result-valid">
             <div class="result-icon"><i class="fa-solid fa-circle-check"></i></div>
             <div class="result-title">Documento válido</div>
             <div class="result-desc">Este documento foi emitido pelo CELINPB e sua autenticidade foi confirmada.</div>
+            <div style="margin-top:.75rem;font-size:.85rem;display:flex;flex-direction:column;gap:4px">
+              <div><strong>Tipo:</strong> ${d.tipoDocumento || '—'}</div>
+              <div><strong>Semestre:</strong> ${d.semestre || '—'}</div>
+              <div><strong>Emitido em:</strong> ${d.dataEmissao || '—'}</div>
+            </div>
           </div>`;
         } else {
           result.innerHTML = `<div class="result-invalid">
