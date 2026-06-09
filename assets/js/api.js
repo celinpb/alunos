@@ -68,6 +68,11 @@ const API = (() => {
     salvarMensagemTurma : (dados)             => _get({ action: 'salvarMensagemTurma',  ...dados }),
     excluirMensagemTurma: (mensagemId)        => _get({ action: 'excluirMensagemTurma', mensagemId }),
     // Documentos
-    gerarDocumento: (tipo, matriculaId)       => _get({ action: 'gerarDocumento', tipo, matriculaId: matriculaId || '' }),
+    buscarAlunos  : (q)                        => _get({ action: 'buscarAlunos',   q }),
+    gerarDocumento: (tipo, alunoIdAlvo, matId) => _get({ action: 'gerarDocumento', tipo,
+                                                    alunoIdAlvo: alunoIdAlvo || '',
+                                                    matriculaId: matId || '' }),
+    verifyDoc     : (codigo, gerarCopia)       => _get({ action: 'verifyDocument', codigo,
+                                                    gerarCopia: gerarCopia || false }, false),
   };
 })();
