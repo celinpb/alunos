@@ -158,7 +158,7 @@
       _htmlCopia = null;
 
       try {
-        const res  = await fetch(`${App.SCRIPT_URL}?action=verifyDocument&codigo=${encodeURIComponent(codigo)}`);
+        const res  = await fetch(`${App.SCRIPT_URL}?action=verifyDocument&codigo=${encodeURIComponent(codigo)}&gerarCopia=true`);
         const json = await res.json();
 
         result.style.display = 'block';
