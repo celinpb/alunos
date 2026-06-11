@@ -17,7 +17,7 @@ const Router = (() => {
       'avisos'      : { logado: true, render: Pages.avisos.render,      init: Pages.avisos.init      },
       'calendario'  : { logado: true, render: Pages.calendario.render,  init: Pages.calendario.init  },
       'documentos'  : { logado: true, render: Pages.documentos.render,  init: Pages.documentos.init  },
-      // 'rematricula' : { logado: true, render: Pages.rematricula.render, init: Pages.rematricula.init },
+      'rematricula' : { logado: true, render: Pages.rematricula.render, init: Pages.rematricula.init },
       // 'historico'   : { logado: true, render: Pages.historico.render,   init: Pages.historico.init   },
       // 'chamados'    : { logado: true, render: Pages.chamados.render,    init: Pages.chamados.init    },
       'admin'       : { logado: true, guard: ['admin'], render: Pages.admin.render, init: Pages.admin.init },
