@@ -74,5 +74,10 @@ const API = (() => {
                                                     matriculaId: matId || '' }),
     verifyDoc     : (codigo, gerarCopia)       => _get({ action: 'verifyDocument', codigo,
                                                     gerarCopia: gerarCopia || false }, false),
+    // Rematrícula
+    getTurmasRematricula      : ()             => _get({ action: 'getTurmasRematricula' }),
+    solicitarRematricula      : (dados)        => _get({ action: 'solicitarRematricula', ...dados }),
+    getRematriculas           : (status)       => _get({ action: 'getRematriculas', status: status || '' }),
+    atualizarStatusRematricula: (dados)        => _get({ action: 'atualizarStatusRematricula', ...dados }),
   };
 })();
