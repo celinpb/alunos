@@ -79,5 +79,18 @@ const API = (() => {
     solicitarRematricula      : (dados)        => _get({ action: 'solicitarRematricula', ...dados }),
     getRematriculas           : (status)       => _get({ action: 'getRematriculas', status: status || '' }),
     atualizarStatusRematricula: (dados)        => _get({ action: 'atualizarStatusRematricula', ...dados }),
+    // Rematrícula expandida
+    getConfigRematricula    : ()               => _get({ action: 'getConfigRematricula' }),
+    salvarDocRematricula    : (dados)          => _get({ action: 'salvarDocRematricula',    ...dados }),
+    excluirDocRematricula   : (docId)          => _get({ action: 'excluirDocRematricula',   docId }),
+    salvarJustificativa     : (dados)          => _get({ action: 'salvarJustificativa',     ...dados }),
+    excluirJustificativa    : (justId)         => _get({ action: 'excluirJustificativa',    justId }),
+    salvarEntryConfig       : (chave, valor)   => _get({ action: 'salvarEntryConfig',       chave, valor }),
+    getDocsAluno            : (alunoId)        => _get({ action: 'getDocsAluno',            alunoId }),
+    validarDocs             : (dados)          => _get({ action: 'validarDocs',
+                                                   rematriculaId: dados.rematriculaId,
+                                                   validacoes: JSON.stringify(dados.validacoes) }),
+    getPosicaoFila          : (dados)          => _get({ action: 'getPosicaoFila',          ...dados }),
+    setDataLimiteRematricula: (dados)          => _get({ action: 'setDataLimiteRematricula',...dados }),
   };
 })();
