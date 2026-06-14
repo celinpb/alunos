@@ -8,7 +8,7 @@
 
 const App = {
 
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbz3DMSCvd-yPpKAZSVm1Su0V3MoedtlZlwlPeHO09by3podV8DlvVp7HT0GDOc5N01K/exec',
+  SCRIPT_URL: 'https://script.google.com/macros/s/SEU_ID_AQUI/exec',
 
   VERSION: '1.0.0',
 
@@ -16,6 +16,7 @@ const App = {
   // A visibilidade real vem do back-end via getModulos().
   MODULOS: {
     turmas      : { nome: 'Turmas Atuais',    icone: 'fa-solid fa-book-open',        rota: 'turmas',       desc: 'Frequência, notas e conteúdo'  },
+    avaliacoes  : { nome: 'Avaliações',       icone: 'fa-solid fa-pen-to-square',    rota: 'avaliacoes',   desc: 'Provas e formulários'           },
     avisos      : { nome: 'Avisos',           icone: 'fa-solid fa-bell',             rota: 'avisos',       desc: 'Comunicados da escola'          },
     calendario  : { nome: 'Calendário',       icone: 'fa-solid fa-calendar-days',    rota: 'calendario',   desc: 'Datas e eventos do semestre'    },
     documentos  : { nome: 'Documentos',       icone: 'fa-solid fa-file-lines',       rota: 'documentos',   desc: 'Declarações e atestados'        },
