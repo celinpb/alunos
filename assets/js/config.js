@@ -8,7 +8,7 @@
 
 const App = {
 
-  SCRIPT_URL: 'https://script.google.com/macros/s/SEU_ID_AQUI/exec',
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbz3DMSCvd-yPpKAZSVm1Su0V3MoedtlZlwlPeHO09by3podV8DlvVp7HT0GDOc5N01K/exec',
 
   VERSION: '1.0.0',
 
