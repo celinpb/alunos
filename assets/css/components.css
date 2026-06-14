@@ -1516,3 +1516,120 @@
 .rem-doc-validar-btns { display: flex; gap: var(--space-2); margin-bottom: var(--space-2); }
 .rem-doc-just-area { display: flex; flex-direction: column; gap: var(--space-2); }
 .form-input-sm { font-size: var(--text-sm); padding: var(--space-2) var(--space-3); }
+
+
+/* ══════════════════════════════════════════════════════════
+   AVALIAÇÕES (PROVAS)
+══════════════════════════════════════════════════════════ */
+
+/* ── Visão do aluno ──────────────────────────────────────── */
+
+.aval-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+}
+
+.aval-card-header {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+.aval-card-titulo {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+.aval-card-sub {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.aval-prova {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+.aval-prova:last-child { border-bottom: none; }
+
+.aval-prova-header { margin-bottom: var(--space-3); }
+.aval-prova-tipo {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  margin-right: var(--space-3);
+}
+.aval-prova-periodo {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.aval-iframe-wrapper {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.aval-iframe {
+  width: 100%;
+  min-height: 600px;
+  display: block;
+  background: var(--bg-elevated);
+}
+
+/* ── Visão da gestão ─────────────────────────────────────── */
+
+.aval-gestao-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.aval-gestao-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-2);
+  transition: border-color var(--transition-base);
+}
+.aval-gestao-item:hover { border-color: var(--border-strong); }
+
+.aval-gestao-info { flex: 1; min-width: 0; }
+.aval-gestao-topo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+.aval-gestao-tipo {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+.aval-gestao-meta {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+.aval-gestao-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  margin-top: var(--space-2);
+}
+.aval-gestao-acoes {
+  display: flex;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
