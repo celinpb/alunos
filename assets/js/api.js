@@ -1,446 +1,118 @@
 // ============================================================
-// Codigo.gs — Roteador central (doGet e doPost)
+// api.js — Camada de comunicação com o back-end
 // Portal do Aluno — CELINPB
 // ============================================================
-//
-// RESPONSABILIDADE:
-//   Ponto de entrada único de todas as requisições HTTP.
-//   Recebe a chamada, identifica a "action" e despacha para
-//   o handler correto. Nenhuma lógica de negócio fica aqui.
-//
-// AÇÕES PÚBLICAS (sem token):
-//   getConfig         → dados públicos da escola (tela de login)
-//   login             → autenticação
-//   trocarSenha       → troca de senha (1º acesso ou voluntária)
-//   verifyDocument    → verificação pública de documento
-//
-// AÇÕES AUTENTICADAS (exigem token):
-//   logout            → encerra sessão
-//   getPerfil         → dados do aluno logado
-//   getModulos        → lista de módulos ativos para o papel
-//   [demais actions serão adicionadas em etapas futuras]
-//
-// COMO ADICIONAR UMA NOVA ACTION:
-//   1. Adicione a entrada no objeto ROTAS abaixo
-//   2. Indique se é pública (publico: true) ou protegida
-//   3. Indique os papéis permitidos (null = todos autenticados)
-//   4. Implemente o handler no arquivo .gs correspondente
-// ============================================================
 
+const API = (() => {
 
-// ============================================================
-// TABELA DE ROTAS
-// ============================================================
+  const CODES = {
+    NAO_AUTORIZADO  : 401,
+    PROIBIDO        : 403,
+    NAO_ENCONTRADO  : 404,
+    PRIMEIRO_ACESSO : 461,
+    ACESSO_BLOQUEADO: 462,
+    TOKEN_EXPIRADO  : 463,
+    ACAO_INVALIDA   : 400,
+    ERRO_INTERNO    : 500
+  };
 
-var ROTAS = {
-
-  // ── Públicas (sem token) ──────────────────────────────────
-  "getConfig": {
-    publico  : true,
-    handler  : function (params) {
-      return Response.ok(Config.getDadosPublicos());
-    }
-  },
-
-  "login": {
-    publico  : true,
-    handler  : function (params) {
-      return Auth.login(params.login, params.senha);
-    }
-  },
-
-  "trocarSenha": {
-    publico  : true, // validação interna por senha atual, não por token
-    handler  : function (params) {
-      return Auth.trocarSenha(params.login, params.senhaAtual, params.senhaNova);
-    }
-  },
-
-
-
-  // ── Autenticadas (exigem token) ───────────────────────────
-
-  "logout": {
-    publico  : false,
-    papeis   : null, // qualquer papel autenticado
-    handler  : function (params, auth) {
-      return Auth.logout(params.token, auth.login, auth.papel);
-    }
-  },
-
-  "getPerfil": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) {
-      return Handlers.getPerfil(auth);
-    }
-  },
-
-  "getModulos": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) {
-      return Handlers.getModulos(auth);
-    }
-  },
-
-  "getSemestreAtual": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) {
-      return Handlers.getSemestreAtual(auth);
-    }
-  },
-
-  // ── Admin ────────────────────────────────────────────────
-
-  "toggleModulo": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) {
-      return Handlers.toggleModulo(params, auth);
-    }
-  },
-
-  "setRematricula": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) {
-      return Handlers.setRematricula(params, auth);
-    }
-  },
-
-  "listarUsuarios": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) {
-      return Handlers.listarUsuarios(auth);
-    }
-  },
-
-  "toggleUsuario": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) {
-      return Handlers.toggleUsuario(params, auth);
-    }
-  },
-
-  "redefinirSenha": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) {
-      return Handlers.redefinirSenha(params, auth);
-    }
-  },
-
-  // ── Avisos ───────────────────────────────────────────────
-
-  "getAvisos": {
-    publico  : false,
-    papeis   : null, // todos os papéis autenticados
-    handler  : function (params, auth) {
-      return Handlers.getAvisos(params, auth);
-    }
-  },
-
-  "salvarAviso": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao"],
-    handler  : function (params, auth) {
-      return Handlers.salvarAviso(params, auth);
-    }
-  },
-
-  "toggleAviso": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao"],
-    handler  : function (params, auth) {
-      return Handlers.toggleAviso(params, auth);
-    }
-  },
-
-  "excluirAviso": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao"],
-    handler  : function (params, auth) {
-      return Handlers.excluirAviso(params, auth);
-    }
-  },
-
-  // ── Calendário ───────────────────────────────────────────
-
-  "getCalendario": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) {
-      return Handlers.getCalendario(params, auth);
-    }
-  },
-
-  "salvarEvento": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "secretaria"],
-    handler  : function (params, auth) {
-      return Handlers.salvarEvento(params, auth);
-    }
-  },
-
-  "excluirEvento": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "secretaria"],
-    handler  : function (params, auth) {
-      return Handlers.excluirEvento(params, auth);
-    }
-  },
-
-  // ── Turmas ───────────────────────────────────────────────
-
-  "getTurmasAluno": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) {
-      return Handlers.getTurmasAluno(params, auth);
-    }
-  },
-
-  "salvarMensagemTurma": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "professor"],
-    handler  : function (params, auth) {
-      return Handlers.salvarMensagemTurma(params, auth);
-    }
-  },
-
-  "excluirMensagemTurma": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "professor"],
-    handler  : function (params, auth) {
-      return Handlers.excluirMensagemTurma(params, auth);
-    }
-  },
-
-  // ── Documentos ───────────────────────────────────────────
-
-  "buscarAlunos": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "secretaria"],
-    handler  : function (params, auth) {
-      return Handlers.buscarAlunos(params, auth);
-    }
-  },
-
-  "gerarDocumento": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) {
-      return Handlers.gerarDocumento(params, auth);
-    }
-  },
-
-  "verifyDocument": {
-    publico  : true,
-    handler  : function (params) {
-      return Handlers.verifyDocument(params);
-    }
-  },
-
-  // ── Rematrícula ──────────────────────────────────────────
-
-  "getTurmasRematricula": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) {
-      return Handlers.getTurmasRematricula(params, auth);
-    }
-  },
-
-  "solicitarRematricula": {
-    publico  : false,
-    papeis   : ["aluno"],
-    handler  : function (params, auth) {
-      return Handlers.solicitarRematricula(params, auth);
-    }
-  },
-
-  "getRematriculas": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "secretaria"],
-    handler  : function (params, auth) {
-      return Handlers.getRematriculas(params, auth);
-    }
-  },
-
-  "atualizarStatusRematricula": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "secretaria"],
-    handler  : function (params, auth) {
-      return Handlers.atualizarStatusRematricula(params, auth);
-    }
-  },
-
-  // ── Rematrícula expandida ────────────────────────────────
-
-  "getConfigRematricula": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) { return Handlers.getConfigRematricula(params, auth); }
-  },
-  "salvarDocRematricula": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) { return Handlers.salvarDocRematricula(params, auth); }
-  },
-  "excluirDocRematricula": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) { return Handlers.excluirDocRematricula(params, auth); }
-  },
-  "salvarJustificativa": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) { return Handlers.salvarJustificativa(params, auth); }
-  },
-  "excluirJustificativa": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) { return Handlers.excluirJustificativa(params, auth); }
-  },
-  "salvarEntryConfig": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) { return Handlers.salvarEntryConfig(params, auth); }
-  },
-  "getDocsAluno": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "secretaria"],
-    handler  : function (params, auth) { return Handlers.getDocsAluno(params, auth); }
-  },
-  "validarDocs": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "secretaria"],
-    handler  : function (params, auth) { return Handlers.validarDocs(params, auth); }
-  },
-  "getPosicaoFila": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) { return Handlers.getPosicaoFila(params, auth); }
-  },
-  "setDataLimiteRematricula": {
-    publico  : false,
-    papeis   : ["admin"],
-    handler  : function (params, auth) { return Handlers.setDataLimiteRematricula(params, auth); }
-  },
-
-  // ── Avaliações (Provas) ──────────────────────────────────
-
-  "getProvasAluno": {
-    publico  : false,
-    papeis   : null,
-    handler  : function (params, auth) { return Handlers.getProvasAluno(params, auth); }
-  },
-  "getProvasGestao": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "professor"],
-    handler  : function (params, auth) { return Handlers.getProvasGestao(params, auth); }
-  },
-  "salvarProva": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "professor"],
-    handler  : function (params, auth) { return Handlers.salvarProva(params, auth); }
-  },
-  "excluirProva": {
-    publico  : false,
-    papeis   : ["admin", "coordenacao", "professor"],
-    handler  : function (params, auth) { return Handlers.excluirProva(params, auth); }
+  // Todas as requisições usam GET para evitar o preflight CORS do navegador.
+  // O Apps Script só suporta CORS sem configuração adicional via GET (doGet).
+  // Os dados trafegam via query string sobre HTTPS, o que é seguro.
+  async function _get(params, autenticado = true) {
+    const p = { ...params };
+    if (autenticado) { const t = Auth.getToken(); if (t) p.token = t; }
+    const res  = await fetch(`${App.SCRIPT_URL}?${new URLSearchParams(p)}`);
+    const json = await res.json();
+    _global(json);
+    return json;
   }
 
-};
-
-
-// ============================================================
-// ROTEADOR INTERNO
-// ============================================================
-
-/**
- * Query string trafega tudo como string.
- * Esta função converte "true"/"false" para boolean
- * e strings numéricas para number, para que os handlers
- * recebam os tipos corretos independente da origem da chamada.
- * @param {Object} params
- * @returns {Object}
- */
-function _normalizarParams(params) {
-  var result = {};
-  Object.keys(params).forEach(function (k) {
-    var v = params[k];
-    if (v === "true")       result[k] = true;
-    else if (v === "false") result[k] = false;
-    else                    result[k] = v;
-  });
-  return result;
-}
-
-/**
- * Processa qualquer requisição.
- * @param {Object} params - Parâmetros já normalizados.
- * @returns {TextOutput}
- */
-function _rotear(params) {
-  var action = String(params.action || "").trim();
-
-  if (!action) {
-    return Response.erro("Parâmetro 'action' ausente.", Response.CODES.ACAO_INVALIDA);
+  // POST com Content-Type text/plain: também não dispara preflight CORS
+  // ("simple request"), mas evita problemas de caracteres especiais
+  // (como #) que podem ser corrompidos na query string durante o
+  // redirecionamento do Apps Script. Usado apenas onde a senha trafega.
+  async function _post(params, autenticado = true) {
+    const p = { ...params };
+    if (autenticado) { const t = Auth.getToken(); if (t) p.token = t; }
+    const res  = await fetch(App.SCRIPT_URL, {
+      method : 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body   : JSON.stringify(p)
+    });
+    const json = await res.json();
+    _global(json);
+    return json;
   }
 
-  var rota = ROTAS[action];
-
-  if (!rota) {
-    return Response.erro("Ação '" + action + "' não reconhecida.", Response.CODES.ACAO_INVALIDA);
-  }
-
-  if (rota.publico) {
-    return rota.handler(params);
-  }
-
-  var auth = Auth.verificar(params.token, rota.papeis || null);
-  if (!auth.ok) return auth.resposta;
-
-  return rota.handler(params, auth);
-}
-
-
-// ============================================================
-// ENTRY POINTS DO APPS SCRIPT
-// ============================================================
-
-/**
- * Único entry point — todas as chamadas do front-end usam GET.
- * O doPost é mantido como fallback mas não é mais necessário.
- */
-function doGet(e) {
-  try {
-    var raw    = (e && e.parameter) ? e.parameter : {};
-    var params = _normalizarParams(raw);
-    return _rotear(params);
-  } catch (err) {
-    console.error("[doGet] Erro não tratado: " + err.message);
-    return Response.erro("Erro interno do servidor.", Response.CODES.ERRO_INTERNO);
-  }
-}
-
-function doPost(e) {
-  try {
-    var params = {};
-    if (e && e.postData && e.postData.contents) {
-      try { params = JSON.parse(e.postData.contents); } catch (_) {}
+  function _global(json) {
+    if (!json.success && json.codigo === CODES.TOKEN_EXPIRADO) {
+      Auth.limparSessao();
+      Router.ir('login');
+      Components.toast('Sua sessão expirou. Faça login novamente.', 'warning');
     }
-    if (e && e.parameter) {
-      Object.keys(e.parameter).forEach(function (k) { if (!params[k]) params[k] = e.parameter[k]; });
-    }
-    return _rotear(_normalizarParams(params));
-  } catch (err) {
-    console.error("[doPost] Erro não tratado: " + err.message);
-    return Response.erro("Erro interno do servidor.", Response.CODES.ERRO_INTERNO);
   }
-}
+
+  return {
+    CODES,
+    // Públicos
+    getConfig    : ()                     => _get({ action: 'getConfig' }, false),
+    login        : (login, senha)         => _post({ action: 'login', login, senha }, false),
+    trocarSenha  : (login, atual, nova)   => _post({ action: 'trocarSenha', login, senhaAtual: atual, senhaNova: nova }, false),
+    verifyDoc    : (codigo)               => _get({ action: 'verifyDocument', codigo }, false),
+    // Autenticados
+    logout           : ()                 => _get({ action: 'logout' }),
+    getPerfil        : ()                 => _get({ action: 'getPerfil' }),
+    getModulos       : ()                 => _get({ action: 'getModulos' }),
+    getSemestreAtual : ()                 => _get({ action: 'getSemestreAtual' }),
+    // Admin
+    toggleModulo  : (modulo, status)      => _get({ action: 'toggleModulo',  modulo,    status }),
+    setRematricula: (semestreId, status)  => _get({ action: 'setRematricula',semestreId,status }),
+    listarUsuarios: ()                    => _get({ action: 'listarUsuarios' }),
+    toggleUsuario : (login, status)       => _get({ action: 'toggleUsuario', login,     status }),
+    redefinirSenha: (login)               => _get({ action: 'redefinirSenha',login }),
+    // Avisos
+    getAvisos    : ()                         => _get({ action: 'getAvisos' }),
+    salvarAviso  : (dados)                    => _get({ action: 'salvarAviso',  ...dados }),
+    toggleAviso  : (avisoId, ativo)           => _get({ action: 'toggleAviso',  avisoId, ativo }),
+    excluirAviso : (avisoId)                  => _get({ action: 'excluirAviso', avisoId }),
+    // Calendário
+    getCalendario: ()                         => _get({ action: 'getCalendario' }),
+    salvarEvento : (dados)                    => _get({ action: 'salvarEvento',  ...dados }),
+    excluirEvento: (eventoId)                 => _get({ action: 'excluirEvento', eventoId }),
+    // Turmas
+    getTurmasAluno      : ()                  => _get({ action: 'getTurmasAluno' }),
+    salvarMensagemTurma : (dados)             => _get({ action: 'salvarMensagemTurma',  ...dados }),
+    excluirMensagemTurma: (mensagemId)        => _get({ action: 'excluirMensagemTurma', mensagemId }),
+    // Documentos
+    buscarAlunos  : (q)                        => _get({ action: 'buscarAlunos',   q }),
+    gerarDocumento: (tipo, alunoIdAlvo, matId) => _get({ action: 'gerarDocumento', tipo,
+                                                    alunoIdAlvo: alunoIdAlvo || '',
+                                                    matriculaId: matId || '' }),
+    verifyDoc     : (codigo, gerarCopia)       => _get({ action: 'verifyDocument', codigo,
+                                                    gerarCopia: gerarCopia || false }, false),
+    // Rematrícula
+    getTurmasRematricula      : ()             => _get({ action: 'getTurmasRematricula' }),
+    solicitarRematricula      : (dados)        => _get({ action: 'solicitarRematricula', ...dados }),
+    getRematriculas           : (status)       => _get({ action: 'getRematriculas', status: status || '' }),
+    atualizarStatusRematricula: (dados)        => _get({ action: 'atualizarStatusRematricula', ...dados }),
+    // Rematrícula expandida
+    getConfigRematricula    : ()               => _get({ action: 'getConfigRematricula' }),
+    salvarDocRematricula    : (dados)          => _get({ action: 'salvarDocRematricula',    ...dados }),
+    excluirDocRematricula   : (docId)          => _get({ action: 'excluirDocRematricula',   docId }),
+    salvarJustificativa     : (dados)          => _get({ action: 'salvarJustificativa',     ...dados }),
+    excluirJustificativa    : (justId)         => _get({ action: 'excluirJustificativa',    justId }),
+    salvarEntryConfig       : (chave, valor)   => _get({ action: 'salvarEntryConfig',       chave, valor }),
+    getDocsAluno            : (alunoId)        => _get({ action: 'getDocsAluno',            alunoId }),
+    validarDocs             : (dados)          => _get({ action: 'validarDocs',
+                                                   rematriculaId: dados.rematriculaId,
+                                                   validacoes: JSON.stringify(dados.validacoes) }),
+    getPosicaoFila          : (dados)          => _get({ action: 'getPosicaoFila',          ...dados }),
+    setDataLimiteRematricula: (dados)          => _get({ action: 'setDataLimiteRematricula',...dados }),
+    // Avaliações (Provas)
+    getProvasAluno  : ()                       => _get({ action: 'getProvasAluno' }),
+    getProvasGestao : (professorId)            => _get({ action: 'getProvasGestao', professorId: professorId || '' }),
+    salvarProva     : (dados)                  => _get({ action: 'salvarProva',  ...dados }),
+    excluirProva    : (provaId)                => _get({ action: 'excluirProva', provaId }),
+  };
+})();
