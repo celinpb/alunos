@@ -87,19 +87,45 @@ function _avalTurmaAlunoHTML(t, idx) {
               </span>
             </div>
           </div>
-          <div class="aval-iframe-wrapper">
-            <iframe src="${p.formLink}" frameborder="0"
-              class="aval-iframe" title="Avaliação: ${p.tipoProva}">
-            </iframe>
-          </div>
+          ${_avalProvaCorpoHTML(p)}
         </div>`).join('')}
     </div>`;
 }
 
 
-// ============================================================
-// VISÃO DA GESTÃO (professor / coordenação / admin)
-// ============================================================
+function _avalProvaCorpoHTML(p) {
+  if (p.status === 'em_breve') {
+    return `
+      <div class="aval-prova-aviso aval-prova-aviso-info">
+        <i class="fa-solid fa-hourglass-half"></i>
+        <div>
+          <div class="aval-prova-aviso-titulo">
+            Disponível em ${p.diasRestantes} dia${p.diasRestantes === 1 ? '' : 's'}
+          </div>
+          <div class="aval-prova-aviso-sub">A partir de ${p.dataInicio}</div>
+        </div>
+      </div>`;
+  }
+
+  if (p.status === 'encerrada') {
+    return `
+      <div class="aval-prova-aviso aval-prova-aviso-neutro">
+        <i class="fa-solid fa-lock"></i>
+        <div>
+          <div class="aval-prova-aviso-titulo">Período de prova encerrado</div>
+          <div class="aval-prova-aviso-sub">Prazo final: ${p.dataFim}</div>
+        </div>
+      </div>`;
+  }
+
+  // disponivel
+  return `
+    <div class="aval-iframe-wrapper">
+      <iframe src="${p.formLink}" frameborder="0"
+        class="aval-iframe" title="Avaliação: ${p.tipoProva}">
+      </iframe>
+    </div>`;
+}
 
 async function _avalInitGestao() {
   const el = document.getElementById('aval-conteudo');
