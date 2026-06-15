@@ -1633,3 +1633,30 @@
   gap: var(--space-1);
   flex-shrink: 0;
 }
+
+
+/* ── Avisos de status da prova (aluno) ───────────────────── */
+
+.aval-prova-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+}
+.aval-prova-aviso i { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.aval-prova-aviso-titulo { font-weight: var(--weight-semibold); }
+.aval-prova-aviso-sub    { color: var(--text-muted); margin-top: 2px; }
+
+.aval-prova-aviso-info {
+  background: var(--info-muted);
+  color: var(--info);
+}
+.aval-prova-aviso-info .aval-prova-aviso-sub { color: var(--text-secondary); }
+
+.aval-prova-aviso-neutro {
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+}
+.aval-prova-aviso-neutro .aval-prova-aviso-titulo { color: var(--text-secondary); }
