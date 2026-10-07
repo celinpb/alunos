@@ -1,0 +1,79 @@
+/* =============================================================================
+   Portal do Aluno — CELINPB · boletim (tela e impressão A4)
+   O boletim é sempre claro (papel), também no modo escuro do aparelho.
+   ============================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; color-scheme: light; }
+body {
+  margin: 0; background: #E4E5EA; color: #1A1A2E;
+  font-family: 'Lexend', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px; line-height: 1.45; overflow-wrap: anywhere;
+}
+[hidden] { display: none !important; }
+h1, h2, h3, p { margin: 0; }
+:focus-visible { outline: 3px solid #2B59C3; outline-offset: 2px; }
+
+.barra {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; gap: 8px; justify-content: space-between;
+  padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+  background: #1A1A2E;
+}
+.b-botao {
+  min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; cursor: pointer;
+  font: inherit; font-weight: 600; font-size: 15px; background: #D62839; color: #fff;
+}
+.b-sec { background: rgba(255,255,255,.14); }
+.b-dica { max-width: 210mm; margin: 12px auto 0; padding: 0 16px; font-size: 13px; color: #50536B; }
+
+.folha {
+  width: 100%; max-width: 210mm; margin: 12px auto 32px;
+  background: #fff; padding: 20px 16px; border-radius: 6px;
+  box-shadow: 0 2px 14px rgba(26,26,46,.12);
+}
+@media (min-width: 700px) { .folha { padding: 16mm 16mm 14mm; } }
+
+.cab { display: flex; align-items: center; gap: 14px; padding-bottom: 12px; border-bottom: 2px solid #1A1A2E; }
+.cab img { width: 120px; flex: none; }
+.cab-txt { flex: 1; min-width: 0; }
+.cab h1 { font-size: 19px; line-height: 1.2; font-weight: 700; }
+.cab p { color: #50536B; font-size: 13px; }
+
+.aluno { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; margin: 14px 0 6px; }
+.aluno b { font-size: 17px; font-weight: 600; }
+.aluno span { color: #50536B; }
+
+.bt { margin-top: 18px; break-inside: avoid; page-break-inside: avoid; border: 1px solid #DADCE3; border-radius: 8px; padding: 12px 14px; }
+.bt-cab { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-bottom: 8px; }
+.bt-cab h2 { font-size: 16px; font-weight: 600; }
+.bt-cab p { color: #50536B; font-size: 12.5px; width: 100%; }
+.res { font-weight: 600; font-size: 13px; padding: 2px 10px; border-radius: 999px; background: #ECEDF1; }
+.res-ok { background: #E3F4EE; color: #146B54; }
+.res-ruim { background: #FBE5E8; color: #A50D25; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { border-bottom: 1px solid #E1E3E8; padding: 6px 5px; text-align: center; overflow-wrap: normal; word-break: normal; white-space: nowrap; }
+th { font-weight: 600; color: #50536B; font-size: 12px; }
+th:first-child, td:first-child { text-align: left; }
+td.media { font-weight: 700; }
+.ok { color: #146B54; } .ruim { color: #A50D25; }
+.tabela-rolagem { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+@media (max-width: 420px) { table { font-size: 12px; } th { font-size: 11px; } .cab img { width: 96px; } .cab h1 { font-size: 17px; } }
+
+.freq { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; }
+.freq b { font-weight: 600; }
+.coms { margin-top: 10px; }
+.coms p { font-size: 13px; color: #33354A; border-left: 3px solid #D62839; padding-left: 10px; margin-top: 6px; }
+.coms span { display: block; font-size: 11.5px; color: #81849A; }
+
+.rodape { margin-top: 20px; padding-top: 10px; border-top: 1px solid #E1E3E8; font-size: 11.5px; color: #81849A; display: flex; flex-direction: column; gap: 4px; }
+.vazio { padding: 32px 4px; text-align: center; color: #50536B; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  body { background: #fff; font-size: 12px; }
+  .barra, .b-dica { display: none !important; }
+  .folha { max-width: none; margin: 0; padding: 0; box-shadow: none; border-radius: 0; }
+  .tabela-rolagem { overflow: visible; }
+  a { color: inherit; text-decoration: none; }
+}

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://kolomiisespdgaoukvbj.supabase.co; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Portal do Aluno — CELINPB</title>
+  <meta name="description" content="Consulte a frequência, as notas e as informações das suas turmas no CELINPB.">
+  <meta name="theme-color" content="#1A1A2E">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icones/favicon.png">
+  <link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CELIN Aluno">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- ===================== TELA 1 — ENTRAR ===================== -->
+  <main id="tela-entrar" class="tela entrar" hidden>
+    <div class="entrar-topo">
+      <img class="entrar-logo" src="icones/logo.png" alt="CELIN — Centro Estadual de Línguas" width="720" height="360">
+    </div>
+
+    <div class="entrar-caixa">
+      <h1 class="entrar-titulo">Portal do Aluno</h1>
+      <p class="entrar-sub">Sua frequência, suas notas e as informações das suas turmas.</p>
+
+      <p class="aviso aviso-info" id="entrar-motivo" hidden></p>
+
+      <form id="form-entrar" novalidate>
+        <div class="campo">
+          <label for="campo-codigo">Código do aluno</label>
+          <input id="campo-codigo" name="codigo" type="text" inputmode="numeric" autocomplete="username"
+                 placeholder="000 0000 00" maxlength="11" required aria-describedby="erro-codigo">
+          <p class="campo-erro" id="erro-codigo" hidden></p>
+        </div>
+
+        <div class="campo">
+          <label for="campo-nascimento">Data de nascimento</label>
+          <input id="campo-nascimento" name="nascimento" type="text" inputmode="numeric" autocomplete="bday"
+                 placeholder="dd/mm/aaaa" maxlength="10" required aria-describedby="erro-nascimento">
+          <p class="campo-erro" id="erro-nascimento" hidden></p>
+        </div>
+
+        <label class="marcar">
+          <input type="checkbox" id="campo-manter">
+          <span>Manter meus dados neste aparelho
+            <small>Marque só se o celular for seu. Assim você vê os dados mesmo sem internet.</small>
+          </span>
+        </label>
+
+        <p class="aviso aviso-erro" id="entrar-erro" role="alert" hidden></p>
+
+        <button class="botao botao-principal" type="submit" id="botao-entrar">
+          <span class="botao-texto">Consultar</span>
+          <span class="giro" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      <details class="ajuda">
+        <summary>Onde encontro meu código?</summary>
+        <p>O código tem 9 números e foi enviado para o seu e-mail cadastrado na escola.
+           Se você não recebeu, procure a secretaria do CELINPB: ela informa o código depois de confirmar quem você é.</p>
+      </details>
+
+      <p class="privacidade">Esta página mostra só as suas informações escolares: turmas, frequência, notas e comentários dos professores.
+        Seus documentos e dados pessoais não aparecem aqui.</p>
+    </div>
+  </main>
+
+  <!-- ===================== TELA 2 — PAINEL ===================== -->
+  <div id="tela-painel" class="tela painel" hidden>
+    <header class="topo">
+      <div class="topo-pontos" aria-hidden="true"></div>
+      <div class="topo-linha">
+        <img class="topo-logo" src="icones/icone-192.png" alt="" width="40" height="40">
+        <div class="topo-acoes">
+          <button class="botao botao-topo" type="button" id="botao-boletim">Boletim</button>
+          <button class="botao botao-topo botao-topo-sec" type="button" id="botao-sair">Sair</button>
+        </div>
+      </div>
+      <h1 class="topo-ola" id="painel-ola"></h1>
+      <p class="topo-codigo" id="painel-codigo"></p>
+      <p class="topo-dados" id="painel-atualizacao"></p>
+    </header>
+
+    <main id="conteudo" class="painel-corpo" tabindex="-1">
+      <p class="aviso aviso-atencao" id="aviso-acesso" hidden></p>
+
+      <div class="aviso aviso-info aviso-acao" id="aviso-desatualizado" hidden>
+        <span>Há dados mais recentes. Digite sua data de nascimento de novo para atualizar.</span>
+        <button class="botao botao-pequeno" type="button" id="botao-atualizar">Atualizar</button>
+      </div>
+
+      <div class="aviso aviso-info aviso-acao" id="aviso-instalar" hidden>
+        <span id="aviso-instalar-texto">Instale o portal no seu celular para abrir com um toque.</span>
+        <span class="aviso-botoes">
+          <button class="botao botao-pequeno" type="button" id="botao-instalar" hidden>Instalar</button>
+          <button class="botao botao-pequeno botao-fantasma" type="button" id="botao-instalar-fechar">Agora não</button>
+        </span>
+      </div>
+
+      <nav class="atalhos" id="atalhos" aria-label="Suas turmas" hidden></nav>
+
+      <div id="turmas"></div>
+
+      <section class="rodape-bloco" id="bloco-eventos" hidden>
+        <h2>Próximos feriados e dias sem aula</h2>
+        <ul class="eventos" id="lista-eventos"></ul>
+      </section>
+
+      <section class="rodape-bloco">
+        <h2>Algum dado está errado?</h2>
+        <p>Fale com a secretaria do CELINPB.</p>
+        <p class="contato" id="contato-escola"></p>
+      </section>
+
+      <p class="rodape-versao" id="rodape-versao"></p>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <noscript><p class="aviso aviso-erro">Ative o JavaScript do navegador para usar o Portal do Aluno.</p></noscript>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

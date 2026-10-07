@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <title>Boletim — Portal do Aluno CELINPB</title>
+  <meta name="theme-color" content="#1A1A2E">
+  <link rel="icon" type="image/png" href="icones/favicon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="impressao.css">
+</head>
+<body>
+  <div class="barra" id="barra">
+    <button class="b-botao b-sec" type="button" id="b-voltar">Voltar</button>
+    <button class="b-botao" type="button" id="b-imprimir">Imprimir ou salvar em PDF</button>
+  </div>
+  <p class="b-dica" id="b-dica">Para salvar em PDF, toque em <strong>Imprimir</strong> e escolha <strong>Salvar como PDF</strong> como impressora.</p>
+
+  <main id="folha" class="folha"></main>
+
+  <script src="boletim.js"></script>
+</body>
+</html>
