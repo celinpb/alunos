@@ -352,6 +352,111 @@ button, input { font: inherit; color: inherit; }
 .toast .botao { background: #fff; color: #1A1A2E; min-height: 36px; }
 
 /* =============================================================================
+   REMATRÍCULA (Fase 5) e MANUAIS
+   ============================================================================= */
+.aviso-remat { background: var(--ok-fundo); color: var(--texto); }
+.aviso-ok { background: var(--ok-fundo); color: var(--ok); font-weight: 600; }
+
+.manuais { border-top: 1px solid var(--linha); padding-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.manuais h2 { font-size: 15px; font-weight: 600; color: var(--texto-2); }
+.manuais-lista { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.manual-link { background: var(--superficie); border: 1.5px solid var(--linha); }
+.rodape-bloco .manual-link { background: var(--superficie); }
+.ic-manual { background: var(--tinta); }
+
+.remat {
+  background: var(--superficie); border: 1.5px solid var(--vermelho); border-radius: var(--raio-g);
+  padding: 18px; display: flex; flex-direction: column; gap: 14px;
+}
+.remat-cab h2 { font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
+.remat-periodo { color: var(--texto-2); font-size: 15px; margin-top: 2px; }
+.remat-carregando { display: flex; align-items: center; gap: 10px; color: var(--texto-2); }
+.giro-escuro { display: inline-block; border-color: var(--linha); border-top-color: var(--vermelho); }
+.remat-form { gap: 10px; }
+.remat-form label { font-weight: 600; font-size: 15px; }
+
+.remat-origem { border-top: 1px solid var(--linha); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.remat-cab + .remat-origem { border-top: 0; padding-top: 0; }
+.remat-titulo { font-size: 18px; font-weight: 600; line-height: 1.25; margin: 0; }
+.remat-destino { font-size: 15px; }
+.remat-msg { font-size: 14px; color: var(--texto-2); }
+.remat-msg-forte { background: var(--atencao-fundo); color: var(--texto); padding: 10px 12px; border-radius: var(--raio-m); font-size: 15px; }
+.remat-sol { background: var(--fundo); border-radius: var(--raio-m); padding: 12px; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.remat-sol-cab { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.remat-prot { font-size: 13px; color: var(--texto-3); font-variant-numeric: tabular-nums; }
+.remat-sol-turma { font-size: 15px; }
+.remat-sol-txt { font-size: 14px; color: var(--texto-2); }
+.remat-acoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.remat-acoes .botao-principal { width: auto; flex: 1 1 220px; }
+
+/* Tela 3 */
+.remat-tela { min-height: 100vh; min-height: 100dvh; }
+.remat-barra {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--tinta); color: #fff;
+  padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+}
+.remat-barra-titulo { font-weight: 600; font-size: 16px; }
+.remat-corpo {
+  width: 100%; max-width: 680px; margin: 0 auto;
+  padding: 18px 16px max(28px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 14px;
+}
+.remat-corpo:focus { outline: none; }
+.remat-h1 { font-size: 26px; line-height: 1.2; font-weight: 700; letter-spacing: -.02em; }
+.remat-sub { color: var(--texto-2); margin-top: -6px; }
+.remat-escolha { display: flex; flex-direction: column; gap: 16px; }
+.opcoes { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.opcoes legend { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--texto-3); padding: 0 0 6px; }
+.opcao {
+  display: flex; align-items: center; gap: 12px; cursor: pointer;
+  background: var(--superficie); border: 1.5px solid var(--linha); border-radius: var(--raio-m);
+  padding: 12px 14px; min-height: 64px;
+}
+.opcao input { width: 22px; height: 22px; margin: 0; accent-color: var(--vermelho); flex: none; }
+.opcao:has(input:checked) { border-color: var(--vermelho); box-shadow: 0 0 0 3px color-mix(in srgb, var(--vermelho) 18%, transparent); }
+.opcao:focus-within { outline: 3px solid var(--foco); outline-offset: 2px; }
+.opcao-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.opcao-dias { font-weight: 600; }
+.opcao-hora { font-size: 15px; color: var(--texto-2); }
+.opcao .selo { align-self: flex-start; }
+.opcao-lotada .opcao-dias { color: var(--texto-2); }
+.remat-nota { color: var(--atencao); font-size: 15px; min-height: 0; }
+.remat-nota:empty { display: none; }
+
+/* Comprovante */
+.comprovante {
+  background: #fff; color: #1A1A2E; border: 1px solid var(--linha); border-radius: var(--raio-g);
+  padding: 20px; display: flex; flex-direction: column; gap: 14px;
+}
+.comprovante-cab { display: flex; align-items: center; gap: 14px; }
+.comprovante-cab img { width: 110px; height: auto; flex: none; }
+.comprovante-cab h1 { font-size: 20px; line-height: 1.2; font-weight: 700; }
+.comprovante-cab p { font-size: 14px; color: #50536B; }
+.comprovante-prot { font-size: 16px; }
+.comprovante-prot strong { font-size: 22px; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.comprovante dl { display: grid; grid-template-columns: minmax(0, 11em) 1fr; gap: 8px 14px; margin: 0; }
+.comprovante dt { font-size: 13px; color: #81849A; }
+.comprovante dd { margin: 0; font-weight: 500; }
+.comprovante-nota { font-size: 13px; color: #50536B; }
+@media (max-width: 420px) {
+  .comprovante dl { grid-template-columns: 1fr; gap: 2px; }
+  .comprovante dd { margin-bottom: 8px; }
+}
+
+@media (min-width: 640px) {
+  .manuais-lista { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media print {
+  body { background: #fff !important; }
+  .pular, .toast, #tela-entrar, #tela-painel, .remat-barra, .remat-nao-imprimir { display: none !important; }
+  .remat-corpo { padding: 0; max-width: none; }
+  .comprovante { border: 0; padding: 0; }
+}
+
+/* =============================================================================
    Telas maiores
    ============================================================================= */
 @media (min-width: 640px) {
