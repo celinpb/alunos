@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://kolomiisespdgaoukvbj.supabase.co; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://kolomiisespdgaoukvbj.supabase.co http://127.0.0.1:54321; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <title>Portal do Aluno — CELINPB</title>
-  <meta name="description" content="Consulte a frequência, as notas e as informações das suas turmas no CELINPB.">
+  <meta name="description" content="Consulte a frequência, as notas e as informações das suas turmas e faça a rematrícula no CELINPB.">
   <meta name="theme-color" content="#1A1A2E">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="icones/favicon.png">
@@ -34,6 +34,7 @@
       <p class="entrar-sub">Sua frequência, suas notas e as informações das suas turmas.</p>
 
       <p class="aviso aviso-info" id="entrar-motivo" hidden></p>
+      <p class="aviso aviso-remat" id="entrar-remat" hidden></p>
 
       <form id="form-entrar" novalidate>
         <div class="campo">
@@ -70,6 +71,11 @@
         <p>O código tem 9 números e foi enviado para o seu e-mail cadastrado na escola.
            Se você não recebeu, procure a secretaria do CELINPB: ela informa o código depois de confirmar quem você é.</p>
       </details>
+
+      <section class="manuais" id="manuais-entrar" hidden aria-labelledby="manuais-entrar-titulo">
+        <h2 id="manuais-entrar-titulo">Manuais</h2>
+        <div class="manuais-lista"></div>
+      </section>
 
       <p class="privacidade">Esta página mostra só as suas informações escolares: turmas, frequência, notas e comentários dos professores.
         Seus documentos e dados pessoais não aparecem aqui.</p>
@@ -108,6 +114,8 @@
         </span>
       </div>
 
+      <section class="remat" id="bloco-remat" aria-live="polite" hidden></section>
+
       <nav class="atalhos" id="atalhos" aria-label="Suas turmas" hidden></nav>
 
       <div id="turmas"></div>
@@ -117,14 +125,28 @@
         <ul class="eventos" id="lista-eventos"></ul>
       </section>
 
+      <section class="rodape-bloco" id="bloco-manuais" hidden>
+        <h2>Manuais</h2>
+        <div class="manuais-lista"></div>
+      </section>
+
       <section class="rodape-bloco">
         <h2>Algum dado está errado?</h2>
         <p>Fale com a secretaria do CELINPB.</p>
-<!--         <p class="contato" id="contato-escola"></p> -->
+<!--        <p class="contato" id="contato-escola"></p> -->
       </section>
 
       <p class="rodape-versao" id="rodape-versao"></p>
     </main>
+  </div>
+
+  <!-- ===================== TELA 3 — REMATRÍCULA (escolha e comprovante) ===================== -->
+  <div id="tela-remat" class="tela remat-tela" hidden>
+    <header class="remat-barra">
+      <button class="botao botao-topo botao-topo-sec" type="button" id="remat-voltar">Voltar</button>
+      <span class="remat-barra-titulo" id="remat-barra-titulo">Rematrícula</span>
+    </header>
+    <main class="remat-corpo" id="remat-corpo" tabindex="-1"></main>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
