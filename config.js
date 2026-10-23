@@ -4,5 +4,5 @@
 window.PORTAL_CONFIG = {
   funcaoUrl: 'https://kolomiisespdgaoukvbj.supabase.co/functions/v1/consulta-aluno',
   escola: 'CELINPB',
-  versao: '1.0.0',
+  versao: '1.1.0',
 };
