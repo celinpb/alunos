@@ -42,10 +42,22 @@
       ' às ' + new Intl.DateTimeFormat('pt-BR', { timeZone: TZ, hour: '2-digit', minute: '2-digit' }).format(d);
   }
 
+  // Nomenclatura da escola (D-62). Dados da versão 1 (antes de 23/10/2026)
+  // usavam REPROVADO para a média e RETIDO para a frequência.
   var RES = {
-    APROVADO: ['Aprovado(a)', 'res-ok'], REPROVADO: ['Reprovado(a)', 'res-ruim'],
-    RETIDO: ['Retido(a) por falta', 'res-ruim'], PENDENTE: ['Notas pendentes', ''],
+    APROVADO: ['Aprovado(a)', 'res-ok'], RETIDO: ['Retido(a)', 'res-ruim'],
+    RETIDO_FALTAS: ['Retido(a) por faltas', 'res-ruim'], PENDENTE: ['Notas pendentes', ''],
   };
+  function normalizar(d) {
+    if (!d || (d.versao || 1) >= 2) return d;
+    (d.turmas || []).forEach(function (t) {
+      if (t.resultado === 'RETIDO') t.resultado = 'RETIDO_FALTAS';
+      else if (t.resultado === 'REPROVADO') t.resultado = 'RETIDO';
+      (t.avaliacoes || []).forEach(function (a) { if (a.situacao === 'REPROVADO') a.situacao = 'ABAIXO'; });
+    });
+    d.versao = 2;
+    return d;
+  }
 
   function voltar() {
     if (window.opener) { window.close(); return; }
@@ -54,7 +66,7 @@
   document.getElementById('b-voltar').addEventListener('click', voltar);
   document.getElementById('b-imprimir').addEventListener('click', function () { window.print(); });
 
-  var d = obterDados();
+  var d = normalizar(obterDados());
   if (!d || !d.aluno || !Array.isArray(d.turmas)) {
     document.getElementById('b-imprimir').hidden = true;
     document.getElementById('b-dica').hidden = true;
@@ -84,7 +96,8 @@
 
   detalhadas.forEach(function (t) {
     var tu = t.turma || {}, f = t.frequencia || {};
-    var andamento = (t.aulas || []).some(function (a) { return a.estado === 'PREVISTA'; });
+    var andamento = !(t.matricula && t.matricula.situacao === 'CONCLUIDA') &&
+      (t.aulas || []).some(function (a) { return a.estado === 'PREVISTA'; });
     var r = andamento ? ['Em andamento', ''] : (RES[t.resultado] || null);
 
     var info = [tu.codigo ? 'Turma ' + tu.codigo : null,
@@ -106,9 +119,9 @@
       var linhas = avs.map(function (a) {
         var tds = [h('td', { text: a.componente })];
         for (var k = 0; k < maxNotas; k++) tds.push(h('td', { text: a.notas && a.notas[k] ? nota(a.notas[k].valor) : '' }));
-        var cls = a.situacao === 'APROVADO' ? 'ok' : a.situacao === 'REPROVADO' ? 'ruim' : '';
+        var cls = a.situacao === 'APROVADO' ? 'ok' : a.situacao === 'ABAIXO' ? 'ruim' : '';
         tds.push(h('td', { class: 'media ' + cls, text: nota(a.media) }));
-        tds.push(h('td', { class: cls, text: a.situacao === 'APROVADO' ? 'Média atingida' : a.situacao === 'REPROVADO' ? 'Abaixo da média' : 'Aguardando' }));
+        tds.push(h('td', { class: cls, text: a.situacao === 'APROVADO' ? 'Média atingida' : a.situacao === 'ABAIXO' ? 'Abaixo da média' : 'Aguardando' }));
         return h('tr', null, tds);
       });
       bloco.appendChild(h('div', { class: 'tabela-rolagem' },
