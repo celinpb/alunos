@@ -7,7 +7,7 @@
    A CADA PUBLICAÇÃO, mude VERSAO abaixo (e a versão em config.js): é assim
    que os celulares descobrem que há uma versão nova.
    ============================================================================= */
-var VERSAO = 'portal-v1.1.1';
+var VERSAO = 'portal-v1.2.0';
 var ARQUIVOS = [
   './',
   'index.html',
