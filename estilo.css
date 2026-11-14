@@ -314,6 +314,21 @@ button, input { font: inherit; color: inherit; }
 .comentario { border-left: 3px solid var(--vermelho); padding: 2px 0 2px 12px; }
 .comentario span { display: block; font-size: 13px; color: var(--texto-3); }
 
+/* ── Materiais (etapa 31) ───────────────────────────────────────────────── */
+.mat { display: flex; flex-direction: column; gap: 10px; }
+.mat + .mat { border-top: 1px dashed var(--linha); padding-top: 14px; }
+.mat-titulo { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mat-parte { font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--info-fundo); color: var(--texto-2); }
+.mat-grupo { display: flex; flex-direction: column; gap: 8px; }
+.mat-unidade { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--texto-3); margin-top: 4px; }
+.mat-link { padding-top: 8px; padding-bottom: 8px; }
+.mat-txt { display: flex; flex-direction: column; min-width: 0; }
+.mat-txt small { font-size: 13px; font-weight: 400; color: var(--texto-3); }
+.ic-livro { background: var(--vermelho); }
+.ic-audio { background: #457B9D; }
+.ic-video { background: #B8860B; }
+.ic-atividade { background: var(--ok); }
+
 /* ── Turma e professor ──────────────────────────────────────────────────── */
 .prof { display: flex; flex-direction: column; gap: 10px; }
 .prof-nome { font-weight: 600; font-size: 17px; }
