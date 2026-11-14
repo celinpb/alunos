@@ -86,9 +86,25 @@
     if (Array.isArray(filho)) { filho.forEach(function (f) { anexar(el, f); }); return; }
     el.appendChild(typeof filho === 'string' || typeof filho === 'number' ? document.createTextNode(String(filho)) : filho);
   }
+  // Aceita o link como o professor digitou e devolve sempre um https:// válido:
+  //   "meet.google.com/abc"         → "https://meet.google.com/abc"
+  //   "http://chat.whatsapp.com/x"  → "https://chat.whatsapp.com/x"
+  // Qualquer outro esquema ("javascript:", "data:"…) ou texto que não seja um
+  // endereço é recusado (null).
   function linkSeguro(url) {
     var u = String(url || '').trim();
-    return /^https:\/\/[^\s]+$/i.test(u) ? u : null;
+    if (!u || /\s/.test(u)) return null;
+    if (/^http:\/\//i.test(u)) u = 'https://' + u.slice(7);
+    else if (!/^https:\/\//i.test(u)) {
+      u = u.replace(/^\/\//, '');
+      // Sem esquema: só vale se começar por um domínio (algo.algo), com porta opcional.
+      if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+(:\d+)?([\/?#]|$)/i.test(u)) return null;
+      u = 'https://' + u;
+    }
+    try {
+      var p = new URL(u);
+      return p.protocol === 'https:' && p.hostname.indexOf('.') > 0 ? p.href : null;
+    } catch (e) { return null; }
   }
   function emailValido(e) { return /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(String(e || '')); }
 
