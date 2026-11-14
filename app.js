@@ -545,7 +545,9 @@
     }
     if (linkSeguro(ln.meet)) links.push(linkBotao(linkSeguro(ln.meet), 'ic-meet', 'M', 'Entrar no Google Meet'));
     if (linkSeguro(ln.classroom)) links.push(linkBotao(linkSeguro(ln.classroom), 'ic-classroom', 'C', 'Abrir o Classroom'));
-    if (linkSeguro(ln.whatsapp)) links.push(linkBotao(linkSeguro(ln.whatsapp), 'ic-whatsapp', 'W', 'Grupo de WhatsApp'));
+    if (linkSeguro(ln.whatsapp)) links.push(linkBotao(linkSeguro(ln.whatsapp), 'ic-whatsapp', 'W', 'Grupo de WhatsApp da turma'));
+    // Grupo de avisos da escola, definido pela coordenação por curso (etapa 32)
+    if (linkSeguro(ln.avisos)) links.push(linkBotao(linkSeguro(ln.avisos), 'ic-avisos', '!', ln.avisos_nome ? 'Avisos da escola: ' + ln.avisos_nome : 'Grupo de avisos da escola'));
 
     var datas = tu.data_inicio || tu.data_fim
       ? 'Período da turma: ' + (tu.data_inicio ? fmtData(tu.data_inicio) : '…') + ' a ' + (tu.data_fim ? fmtData(tu.data_fim) : '…') + '.' : null;
