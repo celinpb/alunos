@@ -344,6 +344,7 @@ button, input { font: inherit; color: inherit; }
 .ic-meet { background: #1E8E3E; }
 .ic-classroom { background: #F29900; }
 .ic-whatsapp { background: #128C4B; }
+.ic-avisos { background: #0B6B3A; }
 .datas-turma { font-size: 14px; color: var(--texto-2); }
 
 /* ── Rodapé ─────────────────────────────────────────────────────────────── */
