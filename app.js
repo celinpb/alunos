@@ -340,6 +340,7 @@
       secao(grupo, 'Notas', resumoNotas(t), corpoNotas(t)),
       (t.comentarios && t.comentarios.length)
         ? secao(grupo, 'Comentários do professor', plural(t.comentarios.length, 'comentário', 'comentários'), corpoComentarios(t)) : null,
+      contarMateriais(t) ? secao(grupo, 'Materiais', plural(contarMateriais(t), 'item', 'itens'), corpoMateriais(t)) : null,
       secao(grupo, 'Turma e professor', null, corpoTurma(t)));
     art.querySelector('.turma-nome').id = 'titulo-turma-' + i;
     return art;
@@ -486,6 +487,52 @@
     return t.comentarios.map(function (c) {
       return h('div', { class: 'comentario' }, h('span', { text: 'Etapa ' + c.etapa }), h('p', { text: c.texto }));
     });
+  }
+
+  // ── Materiais (etapa 31) ─────────────────────────────────────────────────
+  // Livro do aluno e os itens que o professor já liberou para a turma.
+  // Os links abrem o arquivo no Google Drive (ou na plataforma) em outra aba.
+  var TIPO_MAT = {
+    livro_aluno: ['ic-livro', 'L', 'Livro do aluno'],
+    audio: ['ic-audio', '♪', 'Áudio'],
+    video: ['ic-video', '▶', 'Vídeo'],
+    outro: ['ic-atividade', '↗', 'Atividade'],
+  };
+  function itensMaterial(m) { return ((m && m.itens) || []).filter(function (i) { return i && i.titulo && linkSeguro(i.url); }); }
+  function contarMateriais(t) {
+    return (t.materiais || []).reduce(function (n, m) { return n + itensMaterial(m).length; }, 0);
+  }
+  function linkMaterial(i) {
+    var tp = TIPO_MAT[i.tipo] || TIPO_MAT.outro;
+    return h('a', { class: 'link-botao mat-link', href: linkSeguro(i.url), target: '_blank', rel: 'noopener noreferrer' },
+      h('i', { class: tp[0], 'aria-hidden': 'true', text: tp[1] }),
+      h('span', { class: 'mat-txt' }, h('span', { text: i.titulo }),
+        h('small', { text: [i.tipo === 'livro_aluno' ? null : tp[2], i.licao].filter(Boolean).join(' · ') || null })));
+  }
+  function corpoMateriais(t) {
+    var blocos = [];
+    (t.materiais || []).forEach(function (m) {
+      var itens = itensMaterial(m);
+      if (!itens.length) return;
+      var bloco = h('div', { class: 'mat' },
+        h('h3', { class: 'mat-titulo' }, m.parte ? h('span', { class: 'mat-parte', text: m.parte }) : null, m.titulo || 'Material'));
+      var livros = itens.filter(function (i) { return i.tipo === 'livro_aluno'; });
+      if (livros.length) bloco.appendChild(h('div', { class: 'links' }, livros.map(linkMaterial)));
+      var grupos = [], idx = {};
+      itens.filter(function (i) { return i.tipo !== 'livro_aluno'; }).forEach(function (i) {
+        var u = i.unidade || '';
+        if (!(u in idx)) { idx[u] = grupos.length; grupos.push({ u: u, itens: [] }); }
+        grupos[idx[u]].itens.push(i);
+      });
+      grupos.forEach(function (g) {
+        bloco.appendChild(h('div', { class: 'mat-grupo' },
+          g.u ? h('p', { class: 'mat-unidade', text: g.u }) : null,
+          h('div', { class: 'links' }, g.itens.map(linkMaterial))));
+      });
+      blocos.push(bloco);
+    });
+    blocos.push(h('p', { class: 'regra', text: 'Alguns materiais só aparecem aqui depois que o professor os usa em sala. Novos itens podem levar até 6 horas para aparecer.' }));
+    return blocos;
   }
 
   // ── Turma e professor ────────────────────────────────────────────────────
